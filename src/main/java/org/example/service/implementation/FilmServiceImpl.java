@@ -2,7 +2,6 @@ package org.example.service.implementation;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.example.model.Film;
 import org.example.service.FilmService;
 import org.springframework.stereotype.Service;
@@ -23,10 +22,14 @@ public class FilmServiceImpl implements FilmService {
     public void create(Film film) {
         films.put(film.getId(), film);
     }
+
     @Override
     public Film getByTitle(String title) {
-        return films.values().stream().filter(v -> title.equals(v.getTitle())).findFirst().orElse(null);
+        return films.values().stream()
+                .filter(v -> title.equals(v.getTitle()))
+                .findFirst().orElse(null);
     }
+
     @Override
     public Film get(int id) {
         return films.get(id);
