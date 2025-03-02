@@ -8,26 +8,29 @@ import org.example.service.FilmService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @AllArgsConstructor
+@RequestMapping("/films")
 public class FilmController {
     // @Autowired
     private FilmService filmService;
 
-    @GetMapping(value = "/films")
-    public ResponseEntity<?> create(@RequestParam String title) {
-        filmService.create(new Film(title));
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody Film film) {
+        filmService.create(film);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+    @GetMapping
+    public ResponseEntity<Film> getByTitle(@RequestParam String title) {
+        Film film = filmService.getByTitle(title);
+        return new ResponseEntity<>(film, HttpStatus.OK);
+    }
 
-    @GetMapping(value = "/films/{title}")
-    public ResponseEntity<Film> get(@PathVariable(name = "title") String title) {
-        // System.out.println(name);
-        Film film = filmService.get(title);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Film> get(@PathVariable(name = "id") int id) {
+        Film film = filmService.get(id);
         return new ResponseEntity<>(film, HttpStatus.OK);
     }
 }

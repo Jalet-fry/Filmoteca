@@ -6,7 +6,9 @@ import org.example.model.Film;
 public interface FilmService {
     void create(Film film);
 
-    Film get(String title);
+    Film getByTitle(String title);
+
+    Film get(int id);
 }
 
 

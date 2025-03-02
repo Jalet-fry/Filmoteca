@@ -1,22 +1,35 @@
 package org.example.service.implementation;
 
 import java.util.HashMap;
+import java.util.Map;
+
 import org.example.model.Film;
 import org.example.service.FilmService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FilmServiceImpl implements FilmService {
-    private final HashMap<String, Film> films = new HashMap<>();
+    private final HashMap<Integer, Film> films = new HashMap<>(
+            Map.of(
+                    1, new Film(1, "123", "C:\film", 2015),
+                    2, Film.builder().id(2).title("234").build()
+
+
+            )
+
+    );
 
     @Override
     public void create(Film film) {
-        films.put(film.getTitle(), film);
+        films.put(film.getId(), film);
     }
-
     @Override
-    public Film get(String title) {
-        return films.get(title);
+    public Film getByTitle(String title) {
+        return films.values().stream().filter(v -> title.equals(v.getTitle())).findFirst().orElse(null);
+    }
+    @Override
+    public Film get(int id) {
+        return films.get(id);
     }
 }
 
