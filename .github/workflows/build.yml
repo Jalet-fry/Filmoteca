@@ -18,6 +18,8 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available
+      - name: Set execute permission on gradlew
+        run: chmod +x gradlew
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
