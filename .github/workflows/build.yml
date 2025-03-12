@@ -5,40 +5,33 @@ on:
       - lab1
   pull_request:
     types: [opened, synchronize, reopened]
-
 jobs:
   build:
     name: Build and analyze
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Отключаем shallow clone для точного анализа
-
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: 17
-          distribution: 'zulu'
-
-      - name: Grant execute permission for Gradle
-        run: chmod +x gradlew  # Добавляем права на запуск
+          distribution: 'zulu' # Alternative distribution options are available
+      - name: Set execute permission on gradlew
+        run: chmod +x gradlew
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
           path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
