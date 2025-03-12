@@ -23,6 +23,8 @@ jobs:
           java-version: 17
           distribution: 'zulu'
 
+      - name: Grant execute permission for Gradle
+        run: chmod +x gradlew  # Добавляем права на запуск
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
