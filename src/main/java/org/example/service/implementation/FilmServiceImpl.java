@@ -2,11 +2,13 @@
 package org.example.service.implementation;
 
 
-import java.util.List;
-import org.example.model.Film;
+import org.example.model.db.Film;
 import org.example.repository.FilmRepository;
 import org.example.service.FilmService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class FilmServiceImpl implements FilmService {
@@ -17,22 +19,23 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
+    @Transactional
     public void create(Film film) {
         filmRepository.save(film);
     }
 
     @Override
     public Film getByTitle(String title) {
-        return filmRepository.findByTitle(title).orElse(null);
+        return filmRepository.getByTitle(title);
     }
 
     @Override
-    public Film get(int id) {
+    public Film get(long id) {
         return filmRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<Film> getAll() {
-        return filmRepository.findAll();
+        return (List<Film>) filmRepository.findAll();
     }
 }

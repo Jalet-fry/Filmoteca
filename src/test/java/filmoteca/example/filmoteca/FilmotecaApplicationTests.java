@@ -8,7 +8,6 @@ class FilmotecaApplicationTests {
 
     @Test
     void contextLoads() {
-        //It will be
     }
 
 }
