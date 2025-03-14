@@ -2,16 +2,21 @@
 package org.example.service.implementation;
 
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.example.model.db.Actor;
 import org.example.model.db.Film;
+import org.example.repository.ActorRepository;
 import org.example.repository.FilmRepository;
 import org.example.service.FilmService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
+    private final ActorRepository actorRepository;
     private final FilmRepository filmRepository;
 
     public FilmServiceImpl(FilmRepository filmRepository) {
@@ -19,7 +24,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public void create(Film film) {
         filmRepository.save(film);
     }
@@ -37,5 +42,11 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public List<Film> getAll() {
         return (List<Film>) filmRepository.findAll();
+    }
+
+    @Override
+    public void update(Film film) {
+        actorRepository.saveAll(film.getActors());
+        filmRepository.save(film);
     }
 }

@@ -12,12 +12,9 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-public class FilmDto {
+public class ActorDto {
     private int id;
-    private DirectorDto director;
-    @Builder.Default
-    private List<ActorDto> actors = new ArrayList<>();
-    private String title;
-    private String link;
-    private int year;
+    private String name;
+    //@Builder.Default
+    private List<FilmDto> films = new ArrayList<>();
 }

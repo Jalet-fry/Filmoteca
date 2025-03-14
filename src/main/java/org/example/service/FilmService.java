@@ -11,5 +11,7 @@ public interface FilmService {
     Film get(long id);
 
     List<Film> getAll();  // Новый метод
+
+    void update(Film entity);
 }
 

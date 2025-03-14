@@ -1,20 +1,25 @@
 package org.example.controller;
 
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.example.model.Convert;
 import org.example.model.FilmDto;
-import org.example.model.db.Director;
 import org.example.model.db.Film;
 import org.example.service.FilmService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.example.model.Convert.toDto;
+import static org.example.model.Convert.toEntity;
 
 
 @RestController
@@ -26,6 +31,11 @@ public class FilmController {
     @PostMapping
     public ResponseEntity<String> create(@RequestBody FilmDto filmDto) {
         filmService.create(toEntity(filmDto));
+        return ResponseEntity.status(201).body("Film created successfully");
+    }
+    @PutMapping
+    public ResponseEntity<String> change(@RequestBody FilmDto filmDto) {
+        filmService.update(toEntity(filmDto));
         return ResponseEntity.status(201).body("Film created successfully");
     }
 
@@ -46,31 +56,10 @@ public class FilmController {
     // Новый метод для получения всех фильмов
     @GetMapping("/all")
     public ResponseEntity<List<FilmDto>> getAllFilms() {
-        List<FilmDto> filmDtos = filmService.getAll().stream().map(this::toDto).toList();
+        List<FilmDto> filmDtos = filmService.getAll().stream().map(Convert::toDto).toList();
         return ResponseEntity.ok(filmDtos);
     }
 
-    private Film toEntity(FilmDto from) {
-        var to = new Film();
-        to.setId(from.getId());
-        to.setLink(from.getLink());
-        to.setYear(from.getYear());
-        to.setTitle(from.getTitle());
-        //entity.setDirector(Director.builder().id(dto.getDirector_id()).build());
-        to.setDirector(from.getDirectorId() == null ? null : new Director(from.getDirectorId()));
-        return to;
-    }
-
-    private FilmDto toDto(Film from) {
-        return FilmDto.builder()
-                .id(from.getId())
-                .link(from.getLink())
-                .year(from.getYear())
-                .title(from.getTitle())
-                .directorId(from.getDirector().getId())
-                //director(конвертация в directorDTO
-                .build();
-    }
 
 
 }
