@@ -9,11 +9,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class FilmDTO {
+public class DirectorDto {
     private int id;
-    private Integer directorId;
-    //TODO:private DirectorDTO director;
-    private String title;
-    private String link;
-    private int year;
+    private String name;
 }
