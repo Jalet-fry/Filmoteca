@@ -1,20 +1,19 @@
 package org.example.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor
 @Setter
 @Getter
 @Builder
 public class ActorDto {
-    private int id;
+    private long id;
     private String name;
-    //@Builder.Default
+    @Builder.Default
     private List<FilmDto> films = new ArrayList<>();
 }

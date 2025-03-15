@@ -11,8 +11,10 @@ public class Convert {
                 .link(from.getLink())
                 .year(from.getYear())
                 .title(from.getTitle())
-                .director(toEntity(from.getDirector()))
-                .actors(from.getActors() == null ? null : from.getActors().stream().map(Convert::toEntity).toList())
+                .director(Director.builder().name(from.getDirector()).build())
+                .actors(from.getActors() == null ? null
+                        : from.getActors().stream()
+                        .map(name -> Actor.builder().name(name).build()).toList())
                 .build();
     }
 
@@ -20,6 +22,8 @@ public class Convert {
         return from == null ? null : Director.builder()
                 .id(from.getId())
                 .name(from.getName())
+                .films(from.getFilms() == null ? null : from.getFilms()
+                        .stream().map(Convert::toEntity).toList())
                 .build();
     }
 
@@ -38,8 +42,10 @@ public class Convert {
                 .link(from.getLink())
                 .year(from.getYear())
                 .title(from.getTitle())
-                .director(toDto(from.getDirector()))
-                .actors(from.getActors() == null ? null : from.getActors().stream().map(Convert::toDto).toList())
+                .director(from.getDirector().getName())
+                .actors(from.getActors() == null ? null
+                        : from.getActors().stream()
+                        .map(Actor::getName).toList())
                 .build();
     }
 
@@ -48,7 +54,9 @@ public class Convert {
         return from == null ? null : ActorDto.builder()
                 .id(from.getId())
                 .name(from.getName())
-                .films(from.getFilms() == null ? null : from.getFilms().stream().map(Convert::toDto).toList())
+                .films(from.getFilms() == null ? null
+                        : from.getFilms().stream()
+                        .map(Convert::toDto).toList())
                 .build();
     }
 
@@ -57,6 +65,9 @@ public class Convert {
         return from == null ? null : DirectorDto.builder()
                 .id(from.getId())
                 .name(from.getName())
+                .films(from.getFilms() == null ? null
+                        : from.getFilms().stream()
+                        .map(Convert::toDto).toList())
                 .build();
     }
 }

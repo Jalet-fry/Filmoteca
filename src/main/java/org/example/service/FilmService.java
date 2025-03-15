@@ -4,6 +4,8 @@ import java.util.List;
 import org.example.model.db.Film;
 
 public interface FilmService {
+    List<Film> getByDirector(String director);
+
     void create(Film film);
 
     Film getByTitle(String title);
@@ -13,5 +15,7 @@ public interface FilmService {
     List<Film> getAll();  // Новый метод
 
     void update(Film entity);
+
+    void delete(long id);
 }
 

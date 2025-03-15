@@ -1,0 +1,76 @@
+package org.example.controller;
+
+import static org.example.model.Convert.toDto;
+import static org.example.model.Convert.toEntity;
+
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.example.model.Convert;
+import org.example.model.DirectorDto;
+import org.example.model.db.Director;
+import org.example.service.DirectorService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/directors")
+public class DirectorController {
+    private final DirectorService directorService;
+
+    @PostMapping
+    public ResponseEntity<String> create(@RequestBody DirectorDto directorDto) {
+        Director director = toEntity(directorDto);
+        director.setId(0);
+        director.setFilms(null);
+        directorService.create(director);
+        return ResponseEntity.status(201).body("Director created successfully");
+    }
+
+    @PutMapping
+    public ResponseEntity<String> change(@RequestBody DirectorDto directorDto) {
+        directorService.update(toEntity(directorDto));
+        return ResponseEntity.status(200).body("Director changed successfully");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable long id) {
+        directorService.delete(id);
+        return ResponseEntity.status(200).body("Director deleted successfully");
+    }
+
+    @GetMapping
+    public ResponseEntity<DirectorDto> getByName(@RequestParam String name) {
+        Optional<Director> director = Optional.ofNullable(directorService.getByName(name));
+        return director.map(entity -> ResponseEntity.ok(toDto(entity)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get(@PathVariable long id) {
+        Optional<Director> director = Optional.ofNullable(directorService.get(id));
+        return director.map(entity -> ResponseEntity.ok(toDto(entity)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Новый метод для получения всех фильмов
+    @GetMapping("/all")
+    public ResponseEntity<List<DirectorDto>> getAllDirectors() {
+        List<DirectorDto> directorDtos = directorService.getAll().stream()
+            .map(Convert::toDto).toList();
+        return ResponseEntity.ok(directorDtos);
+    }
+
+
+
+}
