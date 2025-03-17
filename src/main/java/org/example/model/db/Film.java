@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -41,11 +42,11 @@ public class Film {
     @Column
     private String link;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL) //(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "director_id")
     private Director director;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //(cascade = CascadeType.ALL)
     @Builder.Default
     private List<Actor> actors = new ArrayList<>();
 

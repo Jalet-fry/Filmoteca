@@ -66,13 +66,10 @@ public class ActorController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Новый метод для получения всех фильмов
     @GetMapping("/all")
     public ResponseEntity<List<ActorDto>> getAllActors() {
         List<ActorDto> actorDtos = actorService.getAll().stream().map(Convert::toDto).toList();
         return ResponseEntity.ok(actorDtos);
     }
-
-
 
 }

@@ -46,6 +46,7 @@ public class ActorServiceImpl implements ActorService {
     @Override
     public void delete(long id) {
         actorRepository.deleteById(id);
+
     }
 
     @Override

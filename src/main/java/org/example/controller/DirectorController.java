@@ -63,14 +63,10 @@ public class DirectorController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Новый метод для получения всех фильмов
     @GetMapping("/all")
     public ResponseEntity<List<DirectorDto>> getAllDirectors() {
         List<DirectorDto> directorDtos = directorService.getAll().stream()
             .map(Convert::toDto).toList();
         return ResponseEntity.ok(directorDtos);
     }
-
-
-
 }
