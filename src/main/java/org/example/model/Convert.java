@@ -115,7 +115,6 @@ public class Convert {
             return null;
         }
 
-        // Extracting the nested ternary operation into an independent statement
         var films = from.getFilms() == null ? null
                 : from.getFilms().stream()
                 .map(Convert::toEntity)
@@ -133,7 +132,6 @@ public class Convert {
             return null;
         }
 
-        // Extracting the nested ternary operation into an independent statement
         var films = from.getFilms() == null ? null
                 : from.getFilms().stream()
                 .map(Convert::toEntity)
@@ -152,7 +150,6 @@ public class Convert {
             return null;
         }
 
-        // Extracting the nested ternary operation into an independent statement
         var films = from.getFilms() == null ? null
                 : from.getFilms().stream()
                 .map(Convert::toDto)
@@ -170,7 +167,6 @@ public class Convert {
             return null;
         }
 
-        // Extracting the nested ternary operation into an independent statement
         var films = from.getFilms() == null ? null
                 : from.getFilms().stream()
                 .map(Convert::toDto)
@@ -188,7 +184,6 @@ public class Convert {
             return null;
         }
 
-        // Extracting the nested ternary operation into an independent statement
         var actors = from.getActors() == null ? null
                 : from.getActors().stream()
                 .map(Actor::getName)
@@ -209,8 +204,8 @@ public class Convert {
             return null;
         }
         return films.stream()
-                .map(Convert::toDto) // Используем метод toDto для каждого элемента
-                .collect(Collectors.toList()); // Собираем результат в список
+                .map(Convert::toDto)
+                .collect(Collectors.toList());
     }
 
 
@@ -219,8 +214,8 @@ public class Convert {
             return null;
         }
         return actors.stream()
-                .map(Convert::toDto) // Используем метод toDto для каждого элемента
-                .collect(Collectors.toList()); // Собираем результат в список
+                .map(Convert::toDto)
+                .collect(Collectors.toList());
     }
 
 
@@ -229,7 +224,7 @@ public class Convert {
             return null;
         }
         return directors.stream()
-                .map(Convert::toDto) // Используем метод toDto для каждого элемента
-                .collect(Collectors.toList()); // Собираем результат в список
+                .map(Convert::toDto)
+                .collect(Collectors.toList());
     }
 }
