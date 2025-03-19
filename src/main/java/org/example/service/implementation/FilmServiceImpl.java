@@ -63,7 +63,10 @@ public class FilmServiceImpl implements FilmService {
     @Transactional
     public void update(Film film) {
         Film existed = filmRepository.findById(film.getId()).orElseThrow();
-        if (film.getTitle() != null) {
+        if (film.getTitle() != null && !existed.getTitle().equals(film.getTitle())) {
+            if (filmRepository.existsByTitle(film.getTitle())) {
+                throw new EntityExistsException("Film already exists");
+            }
             existed.setTitle(film.getTitle());
         }
         if (film.getDirector().getName() != null

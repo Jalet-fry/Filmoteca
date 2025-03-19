@@ -37,7 +37,10 @@ public class ActorServiceImpl implements ActorService {
     @Override
     public void update(Actor actor) {
         Actor existed = actorRepository.findById(actor.getId()).orElseThrow();
-        if (actor.getName() != null) {
+        if (actor.getName() != null && !actor.getName().equals(existed.getName())) {
+            if (actorRepository.existsByName(actor.getName())) {
+                throw new EntityExistsException("Actor already exists");
+            }
             existed.setName(actor.getName());
         }
         actorRepository.save(existed);

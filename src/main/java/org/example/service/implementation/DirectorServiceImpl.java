@@ -38,7 +38,10 @@ public class DirectorServiceImpl implements DirectorService {
     @Override
     public void update(Director director) {
         Director existed = directorRepository.findById(director.getId()).orElseThrow();
-        if (director.getName() != null) {
+        if (director.getName() != null && !director.getName().equals(existed.getName())) {
+            if (directorRepository.existsByName(director.getName())) {
+                throw new EntityExistsException("Director already exists");
+            }
             existed.setName(director.getName());
         }
         directorRepository.save(existed);

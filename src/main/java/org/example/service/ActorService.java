@@ -8,7 +8,7 @@ public interface ActorService {
 
     Actor get(long id);
 
-    List<Actor> getAll();  // Новый метод
+    List<Actor> getAll();
 
     void update(Actor entity);
 
