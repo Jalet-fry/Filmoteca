@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import static org.example.model.Convert.toDto;
+import static org.example.model.Convert.toDtoList;
 import static org.example.model.Convert.toEntity;
 
 import java.util.List;
@@ -47,12 +48,21 @@ public class FilmController {
         filmService.delete(id);
         return ResponseEntity.status(200).body("Film deleted successfully");
     }
+    //    @GetMapping
+    //    public ResponseEntity<List<FilmDto>> getByTitle(@RequestParam String title) {
+    //        Optional<List<Film>> film = Optional.ofNullable(filmService.getByTitle(title));
+    //        return film.map(entity -> ResponseEntity.ok(toDto(entity)))
+    //                .orElseGet(() -> ResponseEntity.notFound().build());
+    //    }
 
     @GetMapping
-    public ResponseEntity<FilmDto> getByTitle(@RequestParam String title) {
-        Optional<Film> film = Optional.ofNullable(filmService.getByTitle(title));
-        return film.map(entity -> ResponseEntity.ok(toDto(entity)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<List<FilmDto>> getByTitle(@RequestParam String title) {
+        List<Film> films = filmService.getByTitle(title);
+        if (films != null && !films.isEmpty()) {
+            return ResponseEntity.ok(toDtoList(films));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{id}")

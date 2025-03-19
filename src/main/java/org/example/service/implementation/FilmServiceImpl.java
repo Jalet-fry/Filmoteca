@@ -26,7 +26,7 @@ public class FilmServiceImpl implements FilmService {
 
 
     @Override
-    public Film getByTitle(String title) {
+    public List<Film> getByTitle(String title) {
         return filmRepository.getByTitle(title);
     }
 
@@ -48,9 +48,6 @@ public class FilmServiceImpl implements FilmService {
     @Override
     @Transactional
     public void create(Film film) {
-        if (filmRepository.existsByTitle(film.getTitle())) {
-            throw new EntityExistsException("Film already exists");
-        }
         film.setActors(film.getActors().stream()
                 .map(actor -> actorRepository.getByName(actor.getName())
                         .orElse(actor)).toList());
@@ -64,9 +61,6 @@ public class FilmServiceImpl implements FilmService {
     public void update(Film film) {
         Film existed = filmRepository.findById(film.getId()).orElseThrow();
         if (film.getTitle() != null && !existed.getTitle().equals(film.getTitle())) {
-            if (filmRepository.existsByTitle(film.getTitle())) {
-                throw new EntityExistsException("Film already exists");
-            }
             existed.setTitle(film.getTitle());
         }
         if (film.getDirector().getName() != null

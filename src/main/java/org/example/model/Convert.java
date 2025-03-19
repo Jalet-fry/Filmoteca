@@ -76,6 +76,8 @@ public class Convert {
 
 package org.example.model;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.example.model.db.Actor;
 import org.example.model.db.Director;
 import org.example.model.db.Film;
@@ -144,26 +146,6 @@ public class Convert {
                 .build();
     }
 
-    public static FilmDto toDto(Film from) {
-        if (from == null) {
-            return null;
-        }
-
-        // Extracting the nested ternary operation into an independent statement
-        var actors = from.getActors() == null ? null
-                : from.getActors().stream()
-                .map(Actor::getName)
-                .toList();
-
-        return FilmDto.builder()
-                .id(from.getId())
-                .link(from.getLink())
-                .year(from.getYear())
-                .title(from.getTitle())
-                .director(from.getDirector().getName())
-                .actors(actors)
-                .build();
-    }
 
     public static ActorDto toDto(Actor from) {
         if (from == null) {
@@ -199,5 +181,55 @@ public class Convert {
                 .name(from.getName())
                 .films(films)
                 .build();
+    }
+
+    public static FilmDto toDto(Film from) {
+        if (from == null) {
+            return null;
+        }
+
+        // Extracting the nested ternary operation into an independent statement
+        var actors = from.getActors() == null ? null
+                : from.getActors().stream()
+                .map(Actor::getName)
+                .toList();
+
+        return FilmDto.builder()
+                .id(from.getId())
+                .link(from.getLink())
+                .year(from.getYear())
+                .title(from.getTitle())
+                .director(from.getDirector().getName())
+                .actors(actors)
+                .build();
+    }
+
+    public static List<FilmDto> toDtoList(List<Film> films) {
+        if (films == null) {
+            return null;
+        }
+        return films.stream()
+                .map(Convert::toDto) // Используем метод toDto для каждого элемента
+                .collect(Collectors.toList()); // Собираем результат в список
+    }
+
+
+    public static List<ActorDto> toDtoListActors(List<Actor> actors) {
+        if (actors == null) {
+            return null;
+        }
+        return actors.stream()
+                .map(Convert::toDto) // Используем метод toDto для каждого элемента
+                .collect(Collectors.toList()); // Собираем результат в список
+    }
+
+
+    public static List<DirectorDto> toDtoListDirectors(List<Director> directors) {
+        if (directors == null) {
+            return null;
+        }
+        return directors.stream()
+                .map(Convert::toDto) // Используем метод toDto для каждого элемента
+                .collect(Collectors.toList()); // Собираем результат в список
     }
 }

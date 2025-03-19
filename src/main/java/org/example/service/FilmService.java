@@ -8,7 +8,7 @@ public interface FilmService {
 
     void create(Film film);
 
-    Film getByTitle(String title);
+    List<Film> getByTitle(String title);
 
     Film get(long id);
 

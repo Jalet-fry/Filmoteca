@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FilmRepository extends CrudRepository<Film, Long> {
-    Film getByTitle(String title);
+    List<Film> getByTitle(String title);
 
     Boolean existsByTitle(String title);
 
