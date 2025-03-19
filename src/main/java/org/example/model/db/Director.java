@@ -36,7 +36,7 @@ public class Director {
     @Column
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "director_id")
     @Builder.Default
     private List<Film> films = new ArrayList<>();

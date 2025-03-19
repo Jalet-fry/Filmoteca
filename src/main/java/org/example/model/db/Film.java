@@ -42,7 +42,7 @@ public class Film {
     @Column
     private String link;
 
-    @ManyToOne(cascade = CascadeType.ALL) //(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "director_id")
     private Director director;
 
