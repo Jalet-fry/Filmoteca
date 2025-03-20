@@ -8,13 +8,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FilmRepository extends CrudRepository<Film, Long> {
-    List<Film> getByTitle(String title);
-
-    Boolean existsByTitle(String title);
+    List<Film> findByTitle(String title);
 
     @Query(value = """
             select * from film where  director_id = (
-                select id from director where name = :name
+                select id from director where first_name = :name
                 )
         """, nativeQuery = true)
     List<Film> findByDirector(String name);

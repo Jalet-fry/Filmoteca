@@ -65,8 +65,7 @@ public class DirectorController {
 
     @GetMapping("/all")
     public ResponseEntity<List<DirectorDto>> getAllDirectors() {
-        List<DirectorDto> directorDtos = directorService.getAll().stream()
-            .map(Convert::toDto).toList();
+        List<DirectorDto> directorDtos = Convert.toDtoListDirectors(directorService.getAll());
         return ResponseEntity.ok(directorDtos);
     }
 }

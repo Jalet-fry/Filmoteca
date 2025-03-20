@@ -68,7 +68,7 @@ public class ActorController {
 
     @GetMapping("/all")
     public ResponseEntity<List<ActorDto>> getAllActors() {
-        List<ActorDto> actorDtos = actorService.getAll().stream().map(Convert::toDto).toList();
+        List<ActorDto> actorDtos = Convert.toDtoListActors(actorService.getAll());
         return ResponseEntity.ok(actorDtos);
     }
 

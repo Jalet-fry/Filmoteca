@@ -1,5 +1,7 @@
 package org.example.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -11,9 +13,11 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
+@JsonInclude(Include.NON_NULL)
 public class DirectorDto {
     private long id;
-    private String name;
-    @Builder.Default
-    private List<FilmDto> films = new ArrayList<>();
+    private String firstName;
+    private String secondName;
+    private String lastName;
+    private List<FilmDto> films;
 }

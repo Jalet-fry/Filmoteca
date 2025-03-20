@@ -19,9 +19,6 @@ public class DirectorServiceImpl implements DirectorService {
     @Override
     //@Transactional
     public void create(Director director) {
-        if (directorRepository.existsByName(director.getName())) {
-            throw new EntityExistsException("Director already exists");
-        }
         directorRepository.save(director);
     }
 
@@ -38,12 +35,9 @@ public class DirectorServiceImpl implements DirectorService {
     @Override
     public void update(Director director) {
         Director existed = directorRepository.findById(director.getId()).orElseThrow();
-        if (director.getName() != null && !director.getName().equals(existed.getName())) {
-            if (directorRepository.existsByName(director.getName())) {
-                throw new EntityExistsException("Director already exists");
-            }
-            existed.setName(director.getName());
-        }
+        existed.setFirstName(director.getFirstName());
+        existed.setSecondName(director.getSecondName());
+        existed.setLastName(director.getLastName());
         directorRepository.save(existed);
     }
 
@@ -54,6 +48,7 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public Director getByName(String name) {
-        return directorRepository.getByName(name).orElseThrow();
+        return null;
+        //return directorRepository.getByName(name).orElseThrow();
     }
 }

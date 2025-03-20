@@ -30,8 +30,12 @@ public class Actor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
-    private String name;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "second_name")
+    private String secondName;
+    @Column(name = "last_name")
+    private String lastName;
 
     @ManyToMany(mappedBy = "actors")//(cascade = CascadeType.ALL)
     private List<Film> films;

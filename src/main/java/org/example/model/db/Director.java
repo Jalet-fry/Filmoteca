@@ -33,10 +33,14 @@ public class Director {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
-    private String name;
-
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @Column(name = "first_name")
+    private String firstName = "";
+    @Column(name = "second_name")
+    private String secondName = "";
+    @Column(name = "last_name")
+    private String lastName = "";
+    //@OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "director_id")
     @Builder.Default
     private List<Film> films = new ArrayList<>();

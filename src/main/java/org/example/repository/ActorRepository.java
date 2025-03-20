@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ActorRepository extends CrudRepository<Actor, Long> {
-    Optional<Actor> getByName(String name);
-
-    Boolean existsByName(String name);
+    Optional<Actor> getByFirstNameAndSecondNameAndLastName(
+            String firstName, String secondName, String lastName);
 }

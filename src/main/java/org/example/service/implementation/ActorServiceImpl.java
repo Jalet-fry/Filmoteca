@@ -18,9 +18,6 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public void create(Actor actor) {
-        if (actorRepository.existsByName(actor.getName())) {
-            throw new EntityExistsException("Actor already exists");
-        }
         actorRepository.save(actor);
     }
 
@@ -37,12 +34,9 @@ public class ActorServiceImpl implements ActorService {
     @Override
     public void update(Actor actor) {
         Actor existed = actorRepository.findById(actor.getId()).orElseThrow();
-        if (actor.getName() != null && !actor.getName().equals(existed.getName())) {
-            if (actorRepository.existsByName(actor.getName())) {
-                throw new EntityExistsException("Actor already exists");
-            }
-            existed.setName(actor.getName());
-        }
+        existed.setFirstName(actor.getFirstName());
+        existed.setSecondName(actor.getSecondName());
+        existed.setLastName(actor.getLastName());
         actorRepository.save(existed);
     }
 
@@ -54,6 +48,7 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public Actor getByName(String name) {
-        return actorRepository.getByName(name).orElseThrow();
+        return null;
+        //return actorRepository.getByName(name).orElseThrow();
     }
 }

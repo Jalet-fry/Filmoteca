@@ -2,13 +2,11 @@
 package org.example.service.implementation;
 
 
-import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.example.model.db.Actor;
+import org.example.model.db.Director;
 import org.example.model.db.Film;
 import org.example.repository.ActorRepository;
 import org.example.repository.DirectorRepository;
@@ -27,7 +25,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getByTitle(String title) {
-        return filmRepository.getByTitle(title);
+        return filmRepository.findByTitle(title);
     }
 
     @Override
@@ -49,10 +47,21 @@ public class FilmServiceImpl implements FilmService {
     @Transactional
     public void create(Film film) {
         film.setActors(film.getActors().stream()
-                .map(actor -> actorRepository.getByName(actor.getName())
+                .map(actor -> actorRepository
+                        .getByFirstNameAndSecondNameAndLastName(
+                            actor.getFirstName(),
+                            actor.getSecondName(),
+                            actor.getLastName())
                         .orElse(actor)).toList());
-        film.setDirector(directorRepository.getByName(film.getDirector().getName())
-                .orElse(film.getDirector()));
+        Director director = film.getDirector();
+        if (director != null) {
+            film.setDirector(directorRepository
+                    .getByFirstNameAndSecondNameAndLastName(
+                            director.getFirstName(),
+                            director.getSecondName(),
+                            director.getLastName())
+                    .orElse(film.getDirector()));
+        }
         filmRepository.save(film);
     }
 
@@ -60,21 +69,33 @@ public class FilmServiceImpl implements FilmService {
     @Transactional
     public void update(Film film) {
         Film existed = filmRepository.findById(film.getId()).orElseThrow();
-        if (film.getTitle() != null && !existed.getTitle().equals(film.getTitle())) {
+        if (film.getTitle() != null) {
             existed.setTitle(film.getTitle());
         }
-        if (film.getDirector().getName() != null
-                 && !film.getDirector().getName().equals(existed.getDirector().getName())) {
-            existed.setDirector(directorRepository.getByName(film.getDirector().getName())
-                     .orElse(film.getDirector()));
+        Director director = film.getDirector();
+        if (director == null) {
+            existed.setDirector(null);
+        } else {
+            Director oldDirector = existed.getDirector();
+            if (oldDirector == null
+                    || !oldDirector.getFirstName().equals(director.getFirstName())
+                    || !oldDirector.getSecondName().equals(director.getSecondName())
+                    || !oldDirector.getLastName().equals(director.getLastName())) {
+                existed.setDirector(directorRepository.getByFirstNameAndSecondNameAndLastName(
+                                director.getFirstName(),
+                                director.getSecondName(),
+                                director.getLastName())
+                        .orElse(film.getDirector()));
+            }
         }
         if (film.getActors() != null) {
-            Map<String, Actor> existedMap = existed.getActors().stream()
-                    .collect(Collectors.toMap(Actor::getName, actor -> actor));
             existed.setActors(film.getActors().stream()
-                    .map(actor -> existedMap.getOrDefault(
-                            actor.getName(),
-                            actorRepository.getByName(actor.getName()).orElse(actor)))
+                    .map(actor -> actorRepository
+                            .getByFirstNameAndSecondNameAndLastName(
+                                    actor.getFirstName(),
+                                    actor.getSecondName(),
+                                    actor.getLastName())
+                            .orElse(actor))
                     .collect(Collectors.toList())); //toList doesn't work, Hibernate hate it
         }
         if (film.getYear() != null) {
