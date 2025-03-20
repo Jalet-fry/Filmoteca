@@ -231,6 +231,7 @@ public class Convert {
 
 package org.example.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -315,9 +316,9 @@ public class Convert {
         }
         ActorDto dto = ActorDto.builder()
                 .id(from.getId())
-                .firstName(from.getLastName().isEmpty() ? from.getLastName() : null)
-                .secondName(from.getLastName().isEmpty() ? from.getLastName() : null)
-                .lastName(from.getLastName().isEmpty() ? from.getLastName() : null)
+                .firstName(from.getFirstName().isEmpty() ? null : from.getFirstName())
+                .secondName(from.getSecondName().isEmpty() ? null : from.getSecondName())
+                .lastName(from.getLastName().isEmpty() ? null : from.getLastName())
                 .build();
         if (depth > 0 && from.getFilms() != null) {
             dto.setFilms(from.getFilms().stream()
@@ -338,9 +339,9 @@ public class Convert {
 
         DirectorDto dto =  DirectorDto.builder()
                 .id(from.getId())
-                .firstName(from.getFirstName())
-                .secondName(from.getSecondName())
-                .lastName(from.getLastName())
+                .firstName(from.getFirstName().isEmpty() ? null : from.getFirstName())
+                .secondName(from.getSecondName().isEmpty() ? null : from.getSecondName())
+                .lastName(from.getLastName().isEmpty() ? null : from.getLastName())
                 .build();
         if (depth > 0 && from.getFilms() != null) {
             dto.setFilms(from.getFilms().stream()
@@ -378,11 +379,11 @@ public class Convert {
 
     public static List<FilmDto> toDtoList(List<Film> films) {
         if (films == null) {
-            return null;
+            return new ArrayList<>();
         }
         return films.stream()
                 .map(Convert::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static List<ActorDto> toDtoListActors(List<Actor> actors) {
@@ -391,15 +392,15 @@ public class Convert {
         }
         return actors.stream()
                 .map(Convert::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static List<DirectorDto> toDtoListDirectors(List<Director> directors) {
         if (directors == null) {
-            return null;
+            return new ArrayList<>();
         }
         return directors.stream()
                 .map(Convert::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 }
