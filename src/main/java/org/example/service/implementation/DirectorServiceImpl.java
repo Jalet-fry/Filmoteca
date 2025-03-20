@@ -2,7 +2,6 @@
 package org.example.service.implementation;
 
 
-import jakarta.persistence.EntityExistsException;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.example.model.db.Director;
@@ -33,11 +32,26 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public void update(Director director) {
+    public void put(Director director) {
         Director existed = directorRepository.findById(director.getId()).orElseThrow();
         existed.setFirstName(director.getFirstName());
         existed.setSecondName(director.getSecondName());
         existed.setLastName(director.getLastName());
+        directorRepository.save(existed);
+    }
+
+    @Override
+    public void patch(Director director) {
+        Director existed = directorRepository.findById(director.getId()).orElseThrow();
+        if (!director.getFirstName().isEmpty()) {
+            existed.setFirstName(director.getFirstName());
+        }
+        if (!director.getSecondName().isEmpty()) {
+            existed.setSecondName(director.getSecondName());
+        }
+        if (!director.getLastName().isEmpty()) {
+            existed.setLastName(director.getLastName());
+        }
         directorRepository.save(existed);
     }
 
@@ -49,6 +63,5 @@ public class DirectorServiceImpl implements DirectorService {
     @Override
     public Director getByName(String name) {
         return null;
-        //return directorRepository.getByName(name).orElseThrow();
     }
 }

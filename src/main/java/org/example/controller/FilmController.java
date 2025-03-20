@@ -14,6 +14,7 @@ import org.example.service.FilmService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,8 +39,14 @@ public class FilmController {
     }
 
     @PutMapping
-    public ResponseEntity<String> change(@RequestBody FilmDto filmDto) {
-        filmService.update(toEntity(filmDto));
+    public ResponseEntity<String> put(@RequestBody FilmDto filmDto) {
+        filmService.put(toEntity(filmDto));
+        return ResponseEntity.status(200).body("Film changed successfully");
+    }
+
+    @PatchMapping
+    public ResponseEntity<String> patch(@RequestBody FilmDto filmDto) {
+        filmService.patch(toEntity(filmDto));
         return ResponseEntity.status(200).body("Film changed successfully");
     }
 
@@ -48,12 +55,6 @@ public class FilmController {
         filmService.delete(id);
         return ResponseEntity.status(200).body("Film deleted successfully");
     }
-    //    @GetMapping
-    //    public ResponseEntity<List<FilmDto>> getByTitle(@RequestParam String title) {
-    //        Optional<List<Film>> film = Optional.ofNullable(filmService.getByTitle(title));
-    //        return film.map(entity -> ResponseEntity.ok(toDto(entity)))
-    //                .orElseGet(() -> ResponseEntity.notFound().build());
-    //    }
 
     @GetMapping
     public ResponseEntity<List<FilmDto>> getByTitle(@RequestParam String title) {

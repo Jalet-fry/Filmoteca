@@ -13,6 +13,7 @@ import org.example.service.ActorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -39,10 +40,18 @@ public class ActorController {
     }
 
     @PutMapping
-    public ResponseEntity<String> change(@RequestBody ActorDto actorDto) {
+    public ResponseEntity<String> put(@RequestBody ActorDto actorDto) {
         Actor actor = toEntity(actorDto);
         actor.setFilms(null);
-        actorService.update(actor);
+        actorService.put(actor);
+        return ResponseEntity.status(200).body("Actor changed successfully");
+    }
+
+    @PatchMapping
+    public ResponseEntity<String> patch(@RequestBody ActorDto actorDto) {
+        Actor actor = toEntity(actorDto);
+        actor.setFilms(null);
+        actorService.patch(actor);
         return ResponseEntity.status(200).body("Actor changed successfully");
     }
 

@@ -10,7 +10,9 @@ public interface ActorService {
 
     List<Actor> getAll();
 
-    void update(Actor entity);
+    void put(Actor entity);
+
+    void patch(Actor actor);
 
     void delete(long id);
 

@@ -388,7 +388,7 @@ public class Convert {
 
     public static List<ActorDto> toDtoListActors(List<Actor> actors) {
         if (actors == null) {
-            return null;
+            return new ArrayList<>();
         }
         return actors.stream()
                 .map(Convert::toDto)

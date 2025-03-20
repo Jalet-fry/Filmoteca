@@ -10,7 +10,9 @@ public interface DirectorService {
 
     List<Director> getAll();  // Новый метод
 
-    void update(Director entity);
+    void put(Director entity);
+
+    void patch(Director director);
 
     void delete(long id);
 

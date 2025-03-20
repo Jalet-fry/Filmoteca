@@ -2,16 +2,20 @@
 package org.example.service.implementation;
 
 
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.example.model.db.Actor;
 import org.example.model.db.Director;
 import org.example.model.db.Film;
 import org.example.repository.ActorRepository;
 import org.example.repository.DirectorRepository;
 import org.example.repository.FilmRepository;
+import org.example.service.ActorService;
 import org.example.service.FilmService;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Service;
 
 
@@ -21,6 +25,8 @@ public class FilmServiceImpl implements FilmService {
     private final ActorRepository actorRepository;
     private final FilmRepository filmRepository;
     private final DirectorRepository directorRepository;
+    private final EntityManager entityManager;
+    private final LocalContainerEntityManagerFactoryBean entityManagerFactory;
 
 
     @Override
@@ -67,7 +73,61 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     @Transactional
-    public void update(Film film) {
+    public void put(Film film) {
+        Film existed = filmRepository.findById(film.getId()).orElseThrow();
+        existed.setTitle(film.getTitle());
+        Director director = film.getDirector();
+        if (director == null) {
+            existed.setDirector(null);
+        } else {
+            Director oldDirector = existed.getDirector();
+            if (director.getId() != 0) {
+                if (oldDirector == null || oldDirector.getId() != director.getId()) {
+                    oldDirector = directorRepository.findById(director.getId()).orElseThrow();
+                    existed.setDirector(oldDirector);
+                }
+                oldDirector.setFirstName(director.getFirstName());
+                oldDirector.setSecondName(director.getSecondName());
+                oldDirector.setLastName(director.getLastName());
+            } else if (oldDirector == null
+                    || !oldDirector.getFirstName().equals(director.getFirstName())
+                    || !oldDirector.getSecondName().equals(director.getSecondName())
+                    || !oldDirector.getLastName().equals(director.getLastName())) {
+                existed.setDirector(directorRepository.getByFirstNameAndSecondNameAndLastName(
+                                director.getFirstName(),
+                                director.getSecondName(),
+                                director.getLastName())
+                        .orElse(film.getDirector()));
+            }
+        }
+        if (film.getActors() != null) {
+            //ToDo: Check in existing before getFromBd
+            existed.setActors(film.getActors().stream()
+                    .map(actor -> {
+                        if (actor.getId() != 0) {
+                            Actor oldActor = actorRepository.findById(actor.getId()).orElseThrow();
+                            oldActor.setFirstName(actor.getFirstName());
+                            oldActor.setSecondName(actor.getSecondName());
+                            oldActor.setLastName(actor.getLastName());
+                            return oldActor;
+                        }
+                        return actorRepository
+                                .getByFirstNameAndSecondNameAndLastName(
+                                        actor.getFirstName(),
+                                        actor.getSecondName(),
+                                        actor.getLastName())
+                                .orElse(actor);
+                    })
+                    .collect(Collectors.toList())); //toList doesn't work, Hibernate hate it
+        }
+        existed.setYear(film.getYear());
+        existed.setLink(film.getLink());
+        filmRepository.save(existed);
+    }
+
+    @Override
+    @Transactional
+    public void patch(Film film) {
         Film existed = filmRepository.findById(film.getId()).orElseThrow();
         if (film.getTitle() != null) {
             existed.setTitle(film.getTitle());
@@ -77,7 +137,21 @@ public class FilmServiceImpl implements FilmService {
             existed.setDirector(null);
         } else {
             Director oldDirector = existed.getDirector();
-            if (oldDirector == null
+            if (director.getId() != 0) {
+                if (oldDirector == null || oldDirector.getId() != director.getId()) {
+                    oldDirector = directorRepository.findById(director.getId()).orElseThrow();
+                    existed.setDirector(oldDirector);
+                }
+                if (director.getFirstName() != null) {
+                    oldDirector.setFirstName(director.getFirstName());
+                }
+                if (director.getSecondName() != null) {
+                    oldDirector.setSecondName(director.getSecondName());
+                }
+                if (director.getLastName() != null) {
+                    oldDirector.setLastName(director.getLastName());
+                }
+            } else if (oldDirector == null
                     || !oldDirector.getFirstName().equals(director.getFirstName())
                     || !oldDirector.getSecondName().equals(director.getSecondName())
                     || !oldDirector.getLastName().equals(director.getLastName())) {
@@ -90,12 +164,27 @@ public class FilmServiceImpl implements FilmService {
         }
         if (film.getActors() != null) {
             existed.setActors(film.getActors().stream()
-                    .map(actor -> actorRepository
-                            .getByFirstNameAndSecondNameAndLastName(
-                                    actor.getFirstName(),
-                                    actor.getSecondName(),
-                                    actor.getLastName())
-                            .orElse(actor))
+                    .map(actor -> {
+                        if (actor.getId() != 0) {
+                            Actor oldActor = actorRepository.findById(actor.getId()).orElseThrow();
+                            if (!actor.getFirstName().isEmpty()) {
+                                oldActor.setFirstName(actor.getFirstName());
+                            }
+                            if (!actor.getSecondName().isEmpty()) {
+                                oldActor.setSecondName(actor.getSecondName());
+                            }
+                            if (!actor.getLastName().isEmpty()) {
+                                oldActor.setLastName(actor.getLastName());
+                            }
+                            return oldActor;
+                        }
+                        return actorRepository
+                                .getByFirstNameAndSecondNameAndLastName(
+                                        actor.getFirstName(),
+                                        actor.getSecondName(),
+                                        actor.getLastName())
+                                .orElse(actor);
+                    })
                     .collect(Collectors.toList())); //toList doesn't work, Hibernate hate it
         }
         if (film.getYear() != null) {

@@ -13,6 +13,7 @@ import org.example.service.DirectorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,8 +39,14 @@ public class DirectorController {
     }
 
     @PutMapping
-    public ResponseEntity<String> change(@RequestBody DirectorDto directorDto) {
-        directorService.update(toEntity(directorDto));
+    public ResponseEntity<String> put(@RequestBody DirectorDto directorDto) {
+        directorService.put(toEntity(directorDto));
+        return ResponseEntity.status(200).body("Director changed successfully");
+    }
+
+    @PatchMapping
+    public ResponseEntity<String> patch(@RequestBody DirectorDto directorDto) {
+        directorService.patch(toEntity(directorDto));
         return ResponseEntity.status(200).body("Director changed successfully");
     }
 

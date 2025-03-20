@@ -2,7 +2,6 @@
 package org.example.service.implementation;
 
 
-import jakarta.persistence.EntityExistsException;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.example.model.db.Actor;
@@ -32,11 +31,26 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public void update(Actor actor) {
+    public void put(Actor actor) {
         Actor existed = actorRepository.findById(actor.getId()).orElseThrow();
         existed.setFirstName(actor.getFirstName());
         existed.setSecondName(actor.getSecondName());
         existed.setLastName(actor.getLastName());
+        actorRepository.save(existed);
+    }
+
+    @Override
+    public void patch(Actor actor) {
+        Actor existed = actorRepository.findById(actor.getId()).orElseThrow();
+        if (!actor.getFirstName().isEmpty()) {
+            existed.setFirstName(actor.getFirstName());
+        }
+        if (!actor.getSecondName().isEmpty()) {
+            existed.setSecondName(actor.getSecondName());
+        }
+        if (!actor.getLastName().isEmpty()) {
+            existed.setLastName(actor.getLastName());
+        }
         actorRepository.save(existed);
     }
 
@@ -49,6 +63,5 @@ public class ActorServiceImpl implements ActorService {
     @Override
     public Actor getByName(String name) {
         return null;
-        //return actorRepository.getByName(name).orElseThrow();
     }
 }
