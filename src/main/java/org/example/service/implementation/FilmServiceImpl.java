@@ -5,6 +5,8 @@ package org.example.service.implementation;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.example.model.db.Actor;
@@ -13,7 +15,6 @@ import org.example.model.db.Film;
 import org.example.repository.ActorRepository;
 import org.example.repository.DirectorRepository;
 import org.example.repository.FilmRepository;
-import org.example.service.ActorService;
 import org.example.service.FilmService;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Service;
@@ -76,6 +77,7 @@ public class FilmServiceImpl implements FilmService {
     public void put(Film film) {
         Film existed = filmRepository.findById(film.getId()).orElseThrow();
         existed.setTitle(film.getTitle());
+
         Director director = film.getDirector();
         if (director == null) {
             existed.setDirector(null);
@@ -101,24 +103,40 @@ public class FilmServiceImpl implements FilmService {
             }
         }
         if (film.getActors() != null) {
-            //ToDo: Check in existing before getFromBd
-            existed.setActors(film.getActors().stream()
+            Map<Long, Actor> existingActorsMap = existed.getActors().stream()
+                    .collect(Collectors.toMap(Actor::getId, actor -> actor));
+            Set<Long> newActorIds = film.getActors().stream()
+                    .map(Actor::getId)
+                    .collect(Collectors.toSet());
+            existed.getActors().removeIf(actor -> !newActorIds.contains(actor.getId()));
+            List<Actor> updatedActors = film.getActors().stream()
                     .map(actor -> {
                         if (actor.getId() != 0) {
-                            Actor oldActor = actorRepository.findById(actor.getId()).orElseThrow();
-                            oldActor.setFirstName(actor.getFirstName());
-                            oldActor.setSecondName(actor.getSecondName());
-                            oldActor.setLastName(actor.getLastName());
-                            return oldActor;
+                            Actor oldActor = existingActorsMap.get(actor.getId());
+                            if (oldActor != null) {
+                                oldActor.setFirstName(actor.getFirstName());
+                                oldActor.setSecondName(actor.getSecondName());
+                                oldActor.setLastName(actor.getLastName());
+                                return oldActor;
+                            } else {
+                                oldActor = actorRepository.findById(actor.getId()).orElseThrow();
+                                oldActor.setFirstName(actor.getFirstName());
+                                oldActor.setSecondName(actor.getSecondName());
+                                oldActor.setLastName(actor.getLastName());
+                                return oldActor;
+                            }
+                        } else {
+                            return actorRepository
+                                    .getByFirstNameAndSecondNameAndLastName(
+                                            actor.getFirstName(),
+                                            actor.getSecondName(),
+                                            actor.getLastName())
+                                    .orElse(actor);
                         }
-                        return actorRepository
-                                .getByFirstNameAndSecondNameAndLastName(
-                                        actor.getFirstName(),
-                                        actor.getSecondName(),
-                                        actor.getLastName())
-                                .orElse(actor);
                     })
-                    .collect(Collectors.toList())); //toList doesn't work, Hibernate hate it
+                    .collect(Collectors.toList());
+
+            existed.setActors(updatedActors);
         }
         existed.setYear(film.getYear());
         existed.setLink(film.getLink());
@@ -163,30 +181,54 @@ public class FilmServiceImpl implements FilmService {
             }
         }
         if (film.getActors() != null) {
-            existed.setActors(film.getActors().stream()
+            Map<Long, Actor> existingActorsMap = existed.getActors().stream()
+                    .collect(Collectors.toMap(Actor::getId, actor -> actor));
+            Set<Long> newActorIds = film.getActors().stream()
+                    .map(Actor::getId)
+                    .collect(Collectors.toSet());
+            existed.getActors().removeIf(actor -> !newActorIds.contains(actor.getId()));
+            List<Actor> updatedActors = film.getActors().stream()
                     .map(actor -> {
                         if (actor.getId() != 0) {
-                            Actor oldActor = actorRepository.findById(actor.getId()).orElseThrow();
-                            if (!actor.getFirstName().isEmpty()) {
-                                oldActor.setFirstName(actor.getFirstName());
+                            Actor oldActor = existingActorsMap.get(actor.getId());
+                            if (oldActor != null) {
+                                if (actor.getFirstName() != null) {
+                                    oldActor.setFirstName(actor.getFirstName());
+                                }
+                                if (actor.getSecondName() != null) {
+                                    oldActor.setSecondName(actor.getSecondName());
+                                }
+                                if (actor.getLastName() != null) {
+                                    oldActor.setLastName(actor.getLastName());
+                                }
+                                return oldActor;
+                            } else {
+                                oldActor = actorRepository.findById(actor.getId()).orElseThrow();
+                                if (actor.getFirstName() != null) {
+                                    oldActor.setFirstName(actor.getFirstName());
+                                }
+                                if (actor.getSecondName() != null) {
+                                    oldActor.setSecondName(actor.getSecondName());
+                                }
+                                if (actor.getLastName() != null) {
+                                    oldActor.setLastName(actor.getLastName());
+                                }
+                                return oldActor;
                             }
-                            if (!actor.getSecondName().isEmpty()) {
-                                oldActor.setSecondName(actor.getSecondName());
-                            }
-                            if (!actor.getLastName().isEmpty()) {
-                                oldActor.setLastName(actor.getLastName());
-                            }
-                            return oldActor;
+                        } else {
+                            return actorRepository
+                                    .getByFirstNameAndSecondNameAndLastName(
+                                            actor.getFirstName(),
+                                            actor.getSecondName(),
+                                            actor.getLastName())
+                                    .orElse(actor);
                         }
-                        return actorRepository
-                                .getByFirstNameAndSecondNameAndLastName(
-                                        actor.getFirstName(),
-                                        actor.getSecondName(),
-                                        actor.getLastName())
-                                .orElse(actor);
                     })
-                    .collect(Collectors.toList())); //toList doesn't work, Hibernate hate it
+                    .collect(Collectors.toList());
+
+            existed.setActors(updatedActors);
         }
+
         if (film.getYear() != null) {
             existed.setYear(film.getYear());
         }
