@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FilmRepository extends CrudRepository<Film, Long> {
     List<Film> findByTitle(String title);
+
     Film getByTitleAndYearAndDirectorId(String title, int year, Long directorId);
 
     @Query(value = """

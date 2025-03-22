@@ -149,6 +149,7 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
+    @SuppressWarnings("java:S1144")
     private void putActorsOld(Film existed, Film film) {
         if (film.getActors() == null) {
             existed.setActors(null);
