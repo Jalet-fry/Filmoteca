@@ -34,24 +34,14 @@ public class DirectorServiceImpl implements DirectorService {
     @Override
     public void put(Director director) {
         Director existed = directorRepository.findById(director.getId()).orElseThrow();
-        existed.setFirstName(director.getFirstName());
-        existed.setSecondName(director.getSecondName());
-        existed.setLastName(director.getLastName());
+        existed.updateForPut(director);
         directorRepository.save(existed);
     }
 
     @Override
     public void patch(Director director) {
         Director existed = directorRepository.findById(director.getId()).orElseThrow();
-        if (!director.getFirstName().isEmpty()) {
-            existed.setFirstName(director.getFirstName());
-        }
-        if (!director.getSecondName().isEmpty()) {
-            existed.setSecondName(director.getSecondName());
-        }
-        if (!director.getLastName().isEmpty()) {
-            existed.setLastName(director.getLastName());
-        }
+        existed.updateForPatch(director);
         directorRepository.save(existed);
     }
 

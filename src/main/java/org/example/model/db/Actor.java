@@ -39,4 +39,23 @@ public class Actor {
 
     @ManyToMany(mappedBy = "actors")//(cascade = CascadeType.ALL)
     private List<Film> films;
+
+
+    public void updateForPatch(Actor newActor) {
+        if (!newActor.getFirstName().isEmpty()) {
+            this.setFirstName(newActor.getFirstName());
+        }
+        if (!newActor.getSecondName().isEmpty()) {
+            this.setSecondName(newActor.getSecondName());
+        }
+        if (!newActor.getLastName().isEmpty()) {
+            this.setLastName(newActor.getLastName());
+        }
+    }
+
+    public void updateForPut(Actor newActor) {
+        this.setFirstName(newActor.getFirstName());
+        this.setSecondName(newActor.getSecondName());
+        this.setLastName(newActor.getLastName());
+    }
 }

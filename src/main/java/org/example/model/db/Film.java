@@ -50,4 +50,23 @@ public class Film {
     @Builder.Default
     private List<Actor> actors = new ArrayList<>();
 
+
+    public void updateForPatch(Film film) {
+        if (film.getTitle() != null) {
+            this.setTitle(film.getTitle());
+        }
+        if (film.getYear() != null) {
+            this.setYear(film.getYear());
+        }
+        if (film.getLink() != null) {
+            this.setLink(film.getLink());
+        }
+    }
+
+    public void updateForPut(Film film) {
+        this.setTitle(film.getTitle());
+        this.setYear(film.getYear());
+        this.setLink(film.getLink());
+    }
+
 }

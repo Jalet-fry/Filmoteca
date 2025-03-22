@@ -7,6 +7,7 @@ import static org.example.model.Convert.toEntity;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.example.model.Convert;
 import org.example.model.FilmDto;
 import org.example.model.db.Film;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FilmController {
     private final FilmService filmService;
 
+    @SneakyThrows
     @PostMapping
     public ResponseEntity<String> create(@RequestBody FilmDto filmDto) {
         Film film = toEntity(filmDto);

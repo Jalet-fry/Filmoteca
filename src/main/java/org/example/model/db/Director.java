@@ -45,4 +45,21 @@ public class Director {
     @Builder.Default
     private List<Film> films = new ArrayList<>();
 
+    public void updateForPatch(Director newDirector) {
+        if (!newDirector.getFirstName().isEmpty()) {
+            this.setFirstName(newDirector.getFirstName());
+        }
+        if (!newDirector.getSecondName().isEmpty()) {
+            this.setSecondName(newDirector.getSecondName());
+        }
+        if (!newDirector.getLastName().isEmpty()) {
+            this.setLastName(newDirector.getLastName());
+        }
+    }
+
+    public void updateForPut(Director newDirector) {
+        this.setFirstName(newDirector.getFirstName());
+        this.setSecondName(newDirector.getSecondName());
+        this.setLastName(newDirector.getLastName());
+    }
 }

@@ -1,12 +1,13 @@
 package org.example.service;
 
 import java.util.List;
+import org.example.exception.FilmAlreadyExists;
 import org.example.model.db.Film;
 
 public interface FilmService {
     List<Film> getByDirector(String director);
 
-    void create(Film film);
+    void create(Film film) throws FilmAlreadyExists;
 
     List<Film> getByTitle(String title);
 
