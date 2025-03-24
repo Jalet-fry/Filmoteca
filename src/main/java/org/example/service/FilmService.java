@@ -7,11 +7,15 @@ import org.example.model.db.Film;
 public interface FilmService {
     List<Film> getByDirector(String director);
 
+    List<Film> getByActor(String actor);
+
+    List<Film> findByActorAndDirector(String actorName, String directorName);
+
     void create(Film film) throws FilmAlreadyExists;
 
     List<Film> getByTitle(String title);
 
-    Film get(long id);
+    Film get(Long id);
 
     List<Film> getAll();  // Новый метод
 

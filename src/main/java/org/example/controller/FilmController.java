@@ -69,7 +69,7 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable int id) {
+    public ResponseEntity<?> get(@PathVariable long id) {
         Optional<Film> film = Optional.ofNullable(filmService.get(id));
         return film.map(entity -> ResponseEntity.ok(toDto(entity)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -77,11 +77,19 @@ public class FilmController {
 
     @GetMapping("/all")
     public ResponseEntity<List<FilmDto>> getAllFilms(
-            @RequestParam(required = false) String director
+            @RequestParam(required = false) String director,
+            @RequestParam(required = false) String actor
     ) {
-        List<FilmDto> filmDtos = (director == null ? filmService.getAll()
-            : filmService.getByDirector(director)).stream()
-                .map(Convert::toDto).toList();
-        return ResponseEntity.ok(filmDtos);
+        List<Film> films;
+        if (actor != null && director != null) {
+            films = filmService.findByActorAndDirector(actor, director);
+        } else if (actor != null) {
+            films = filmService.getByActor(actor);
+        } else if (director != null) {
+            films = filmService.getByDirector(director);
+        } else {
+            films = filmService.getAll();
+        }
+        return ResponseEntity.ok(films.stream().map(Convert::toDto).toList());
     }
 }

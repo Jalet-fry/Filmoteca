@@ -4,15 +4,14 @@ package org.example.service.implementation;
 
 import static java.util.function.Function.identity;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.example.annotations.CacheBean;
 import org.example.exception.FilmAlreadyExists;
 import org.example.model.db.Actor;
 import org.example.model.db.Director;
@@ -21,7 +20,7 @@ import org.example.repository.ActorRepository;
 import org.example.repository.DirectorRepository;
 import org.example.repository.FilmRepository;
 import org.example.service.FilmService;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.example.service.InMemoryCache;
 import org.springframework.stereotype.Service;
 
 
@@ -29,8 +28,9 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class FilmServiceImpl implements FilmService {
     private final ActorRepository actorRepository;
-    private final FilmRepository filmRepository;
     private final DirectorRepository directorRepository;
+    private final FilmRepository filmRepository;
+    private @CacheBean("films") final InMemoryCache<Long, Film> inMemoryCache;
 
     @Override
     public List<Film> getByTitle(String title) {
@@ -38,18 +38,40 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public Film get(long id) {
-        return filmRepository.findById(id).orElse(null);
+    public Film get(Long id) {
+        return inMemoryCache.get(id)
+                .orElseGet(() -> inMemoryCache.put(id, filmRepository
+                        .findById(id).orElse(null)));
     }
 
     @Override
     public List<Film> getAll() {
-        return (List<Film>) filmRepository.findAll();
+        List<Film> result = (List<Film>) filmRepository.findAll();
+        result.forEach(elem -> inMemoryCache.put(elem.getId(), elem));
+        return result;
     }
 
     @Override
     public List<Film> getByDirector(String director) {
-        return filmRepository.findByDirector(director);
+        List<Film> result = filmRepository.findByDirector(director);
+        result.forEach(elem -> inMemoryCache.put(elem.getId(), elem));
+        return result;
+    }
+
+    @Override
+    public List<Film> getByActor(String actor) {
+        List<Film> result = filmRepository.findByActor(actor);
+        result.forEach(elem -> inMemoryCache.put(elem.getId(), elem));
+        return result;
+    }
+
+    @Override
+    public List<Film> findByActorAndDirector(String actorName, String directorName) {
+        List<Film> result = filmRepository.findByActorAndDirector(
+                actorName,
+                directorName);
+        result.forEach(elem -> inMemoryCache.put(elem.getId(), elem));
+        return result;
     }
 
     @SneakyThrows
@@ -79,25 +101,30 @@ public class FilmServiceImpl implements FilmService {
             }
         }
         filmRepository.save(film);
+        inMemoryCache.put(film.getId(), film);
     }
 
     @Override
     @Transactional
     public void put(Film film) {
-        Film existed = filmRepository.findById(film.getId()).orElseThrow();
+        Film existed = inMemoryCache.get(film.getId())
+                .orElseGet(() -> filmRepository.findById(film.getId()).orElseThrow());
         existed.updateForPut(film);
         putDirector(existed, film);
         putActors(existed, film);
+        inMemoryCache.put(existed.getId(), existed);
         filmRepository.save(existed);
     }
 
     @Override
     @Transactional
     public void patch(Film film) {
-        Film existed = filmRepository.findById(film.getId()).orElseThrow();
+        Film existed = inMemoryCache.get(film.getId())
+                .orElseGet(() -> filmRepository.findById(film.getId()).orElseThrow());
         existed.updateForPatch(film);
         patchDirector(existed, film);
         patchActors(existed, film);
+        inMemoryCache.put(existed.getId(), existed);
         filmRepository.save(existed);
     }
 
@@ -242,6 +269,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void delete(long id) {
+        inMemoryCache.del(id);
         filmRepository.deleteById(id);
     }
 }
