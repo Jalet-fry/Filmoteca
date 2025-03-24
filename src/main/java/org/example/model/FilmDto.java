@@ -20,5 +20,5 @@ public class FilmDto {
     private List<ActorDto> actors;
     private String title;
     private String link;
-    private int year;
+    private Integer year;
 }
