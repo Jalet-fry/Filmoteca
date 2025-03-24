@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class ActorServiceImpl implements ActorService {
     private final ActorRepository actorRepository;
-    private @CacheBean("actors") final InMemoryCache<Long, Actor> inMemoryCache;
+    @CacheBean("actors")
+    private final InMemoryCache<Long, Actor> inMemoryCache;
 
     @Override
     public void create(Actor actor) {

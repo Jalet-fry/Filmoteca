@@ -30,7 +30,8 @@ public class FilmServiceImpl implements FilmService {
     private final ActorRepository actorRepository;
     private final DirectorRepository directorRepository;
     private final FilmRepository filmRepository;
-    private @CacheBean("films") final InMemoryCache<Long, Film> inMemoryCache;
+    @CacheBean("films")
+    private final InMemoryCache<Long, Film> inMemoryCache;
 
     @Override
     public List<Film> getByTitle(String title) {
@@ -176,7 +177,7 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
-    @SuppressWarnings("java:S1144")
+    // This is an interesting realisation of put for Actor
     private void putActorsOld(Film existed, Film film) {
         if (film.getActors() == null) {
             existed.setActors(null);

@@ -19,7 +19,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class DirectorServiceImpl implements DirectorService {
     private final DirectorRepository directorRepository;
-    private @CacheBean("directors") final InMemoryCache<Long, Director> inMemoryCache;
+    @CacheBean("directors")
+    private final InMemoryCache<Long, Director> inMemoryCache;
 
     @Override
     //@Transactional
@@ -37,7 +38,7 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public List<Director> getAll() {
-        List<Director> result = (List<Director>) directorRepository.findAll();
+        List<Director> result =  directorRepository.findAll();
         result.forEach(elem -> inMemoryCache.put(elem.getId(), elem));
         return result;
     }
