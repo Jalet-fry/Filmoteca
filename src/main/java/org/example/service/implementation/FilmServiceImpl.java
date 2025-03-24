@@ -177,36 +177,6 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
-    // This is an interesting realisation of put for Actor
-    @Deprecated(forRemoval = false)
-    private void putActorsOld(Film existed, Film film) {
-        if (film.getActors() == null) {
-            existed.setActors(null);
-        } else {
-            Map<Long, Actor> existingActorsMap = existed.getActors().stream()
-                    .collect(Collectors.toMap(Actor::getId, identity()));
-            List<Actor> updatedActors = film.getActors().stream()
-                    .map(actor -> {
-                        if (actor.getId() != 0) {
-                            Actor oldActor = existingActorsMap.getOrDefault(
-                                    actor.getId(),
-                                    actorRepository.findById(actor.getId()).orElseThrow());
-                            oldActor.updateForPut(actor);
-                            return oldActor;
-                        } else {
-                            return actorRepository
-                                    .getByFirstNameAndSecondNameAndLastName(
-                                            actor.getFirstName(),
-                                            actor.getSecondName(),
-                                            actor.getLastName())
-                                    .orElse(actor);
-                        }
-                    })
-                    .collect(Collectors.toList());
-            existed.setActors(updatedActors);
-        }
-    }
-
     private void putActors(Film existed, Film film) {
         if (film.getActors() == null) {
             existed.setActors(null);
