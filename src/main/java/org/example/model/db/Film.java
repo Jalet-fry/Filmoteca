@@ -46,7 +46,7 @@ public class Film {
     @JoinColumn(name = "director_id")
     private Director director;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}) //(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Builder.Default
     private List<Actor> actors = new ArrayList<>();
 

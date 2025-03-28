@@ -13,13 +13,6 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
     Film getByTitleAndYearAndDirectorId(String title, int year, Long directorId);
 
     @Query(value = """
-            select * from film where  director_id in (
-                select id from director where first_name = :firstName
-                )
-        """, nativeQuery = true)
-    List<Film> findByDirector2(String firstName);
-
-    @Query(value = """
             select f.* from film f join director d on f.director_id = d.Id 
             where d.first_name = :firstName
         """, nativeQuery = true)

@@ -37,7 +37,7 @@ public class Actor {
     @Column(name = "last_name")
     private String lastName;
 
-    @ManyToMany(mappedBy = "actors")//(cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "actors")
     private List<Film> films;
 
 
