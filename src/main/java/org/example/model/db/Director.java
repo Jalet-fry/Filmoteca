@@ -39,7 +39,6 @@ public class Director {
     private String secondName = "";
     @Column(name = "last_name")
     private String lastName = "";
-    //@OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "director_id")
     @Builder.Default
