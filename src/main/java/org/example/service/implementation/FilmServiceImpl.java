@@ -5,7 +5,6 @@ package org.example.service.implementation;
 import static java.util.function.Function.identity;
 
 import jakarta.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +21,7 @@ import org.example.repository.DirectorRepository;
 import org.example.repository.FilmRepository;
 import org.example.service.FilmService;
 import org.example.service.InMemoryCache;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 
@@ -29,8 +29,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class FilmServiceImpl implements FilmService {
     private final ActorRepository actorRepository;
-    private final DirectorRepository directorRepository;
     private final FilmRepository filmRepository;
+    private final DirectorRepository directorRepository;
     @CacheBean("films")
     private final InMemoryCache<Long, Film> inMemoryCache;
 
@@ -106,6 +106,12 @@ public class FilmServiceImpl implements FilmService {
         inMemoryCache.put(film.getId(), film);
     }
 
+    private void saveToCacheAndDb(Film film) {
+        Film savedFilm = filmRepository.save(film);
+        savedFilm.getActors().size();
+        inMemoryCache.put(film.getId(), savedFilm);
+    }
+
     @Override
     @Transactional
     public void put(Film film) {
@@ -114,8 +120,7 @@ public class FilmServiceImpl implements FilmService {
         existed.updateForPut(film);
         putDirector(existed, film);
         putActors(existed, film);
-        inMemoryCache.put(existed.getId(), existed);
-        filmRepository.save(existed);
+        saveToCacheAndDb(existed);
     }
 
     @Override
@@ -126,8 +131,7 @@ public class FilmServiceImpl implements FilmService {
         existed.updateForPatch(film);
         patchDirector(existed, film);
         patchActors(existed, film);
-        inMemoryCache.put(existed.getId(), existed);
-        filmRepository.save(existed);
+        saveToCacheAndDb(existed);
     }
 
     private void putDirector(Film existed, Film film) {
@@ -178,13 +182,11 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
-    private void putActors(Film existed, Film film) {
+    @SuppressWarnings("java:S1144")
+    private void putActorsOld(Film existed, Film film) {
         if (film.getActors() == null) {
             existed.setActors(null);
         } else {
-            if (existed.getActors() == null) {
-                existed.setActors(new ArrayList<>());
-            }
             Map<Long, Actor> existingActorsMap = existed.getActors().stream()
                     .collect(Collectors.toMap(Actor::getId, identity()));
             List<Actor> updatedActors = film.getActors().stream()
@@ -209,19 +211,43 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
+    private void putActors(Film existed, Film film) {
+        if (film.getActors() == null) {
+            existed.setActors(null);
+        } else {
+            Map<Long, Actor> existingActorsMap = existed.getActors().stream()
+                    .collect(Collectors.toMap(Actor::getId, identity()));
+            film.getActors().forEach(actor -> {
+                if (actor.getId() != 0) {
+                    Actor oldActor = existingActorsMap.get(actor.getId());
+                    if (oldActor == null) {
+                        oldActor = actorRepository.findById(actor.getId()).orElseThrow();
+                        existed.getActors().add(oldActor);
+                    }
+                    oldActor.updateForPut(actor);
+                } else {
+                    existed.getActors().add(actorRepository
+                            .getByFirstNameAndSecondNameAndLastName(
+                                    actor.getFirstName(),
+                                    actor.getSecondName(),
+                                    actor.getLastName())
+                            .orElse(actor));
+                }
+            });
+        }
+    }
+
     private void patchActors(Film existed, Film film) {
         if (film.getActors() != null) {
-            if (existed.getActors() == null) {
-                existed.setActors(new ArrayList<>());
-            }
             Map<Long, Actor> existingActorsMap = existed.getActors().stream()
                     .collect(Collectors.toMap(Actor::getId, actor -> actor));
             List<Actor> updatedActors = film.getActors().stream()
                     .map(actor -> {
                         if (actor.getId() != 0) {
-                            Actor oldActor = existingActorsMap.getOrDefault(
-                                    actor.getId(),
-                                    actorRepository.findById(actor.getId()).orElseThrow());
+                            Actor oldActor = existingActorsMap.get(actor.getId());
+                            if (oldActor == null) {
+                                oldActor = actorRepository.findById(actor.getId()).orElseThrow();
+                            }
                             oldActor.updateForPatch(actor);
                             return oldActor;
                         } else {
@@ -234,6 +260,7 @@ public class FilmServiceImpl implements FilmService {
                         }
                     })
                     .collect(Collectors.toList());
+
             existed.setActors(updatedActors);
         }
     }

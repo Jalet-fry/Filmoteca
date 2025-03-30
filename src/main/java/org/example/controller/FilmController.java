@@ -85,7 +85,7 @@ public class FilmController {
             films = filmService.findByActorAndDirector(actor, director);
         } else if (actor != null) {
             films = filmService.getByActor(actor);
-        } else if (director != null) {
+        } else  if (director != null) {
             films = filmService.getByDirector(director);
         } else {
             films = filmService.getAll();
