@@ -30,6 +30,8 @@ dependencies {
     implementation("mysql:mysql-connector-java:8.0.33")
     implementation("org.springframework:spring-orm:6.2.3")
     implementation("org.hibernate.orm:hibernate-core:6.6.10.Final")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:3.4.4")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

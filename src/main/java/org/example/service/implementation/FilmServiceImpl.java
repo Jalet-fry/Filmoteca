@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.example.annotations.CacheBean;
 import org.example.exception.FilmAlreadyExists;
 import org.example.model.db.Actor;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class FilmServiceImpl implements FilmService {
     private final ActorRepository actorRepository;
@@ -41,9 +43,11 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film get(Long id) {
-        return inMemoryCache.get(id)
+        Film result = inMemoryCache.get(id)
                 .orElseGet(() -> inMemoryCache.put(id, filmRepository
-                        .findById(id).orElse(null)));
+                        .findById(id).orElseThrow()));
+        log.info("get: {}", result);
+        return result;
     }
 
     @Override

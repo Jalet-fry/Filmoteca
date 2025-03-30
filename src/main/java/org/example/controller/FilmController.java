@@ -69,7 +69,7 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable long id) {
+    public ResponseEntity<?> get(@PathVariable Long id) {
         Optional<Film> film = Optional.ofNullable(filmService.get(id));
         return film.map(entity -> ResponseEntity.ok(toDto(entity)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
