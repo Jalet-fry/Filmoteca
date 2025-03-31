@@ -40,17 +40,6 @@ public class FilmServiceImpl implements FilmService {
         return filmRepository.findByTitle(title);
     }
 
-    /*
-        @Override
-        public Film get(Long id) {
-            Film result = inMemoryCache.get(id)
-                    .orElseGet(() -> inMemoryCache.put(id, filmRepository
-                            .findById(id).orElseThrow()));
-            log.info("get: {}", result);
-            return result;
-        }
-    */
-
     @Override
     public Film get(Long id) {
         Optional<Film> cachedFilm = inMemoryCache.get(id);
@@ -198,35 +187,6 @@ public class FilmServiceImpl implements FilmService {
                                 director.getLastName())
                         .orElse(film.getDirector()));
             }
-        }
-    }
-
-    @SuppressWarnings("java:S1144")
-    private void putActorsOld(Film existed, Film film) {
-        if (film.getActors() == null) {
-            existed.setActors(null);
-        } else {
-            Map<Long, Actor> existingActorsMap = existed.getActors().stream()
-                    .collect(Collectors.toMap(Actor::getId, identity()));
-            List<Actor> updatedActors = film.getActors().stream()
-                    .map(actor -> {
-                        if (actor.getId() != 0) {
-                            Actor oldActor = existingActorsMap.getOrDefault(
-                                    actor.getId(),
-                                    actorRepository.findById(actor.getId()).orElseThrow());
-                            oldActor.updateForPut(actor);
-                            return oldActor;
-                        } else {
-                            return actorRepository
-                                    .getByFirstNameAndSecondNameAndLastName(
-                                            actor.getFirstName(),
-                                            actor.getSecondName(),
-                                            actor.getLastName())
-                                    .orElse(actor);
-                        }
-                    })
-                    .collect(Collectors.toList());
-            existed.setActors(updatedActors);
         }
     }
 

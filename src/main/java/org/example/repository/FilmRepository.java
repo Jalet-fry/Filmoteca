@@ -18,13 +18,6 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
         """, nativeQuery = true)
     List<Film> findByDirector(String firstName);
 
-    //    @Query(value = """
-    //            select f.* from film f
-    //                join film_actors fa on f.id = fa.films_id
-    //                join actor a on fa.actors_id = a.id
-    //            where a.first_name = :firstName
-    //        """, nativeQuery = true)
-    //    List<Film> findByActor(String firstName);
     @Query("SELECT f FROM Film f JOIN f.actors a WHERE a.firstName = :firstName")
     List<Film> findByActor(String firstName);
 
