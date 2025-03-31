@@ -3,12 +3,12 @@ package org.example.service.implementation;
 
 
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.example.annotations.CacheBean;
 import org.example.model.db.Actor;
 import org.example.model.db.Director;
-import org.example.model.db.Film;
 import org.example.repository.DirectorRepository;
 import org.example.service.DirectorService;
 import org.example.service.InMemoryCache;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class DirectorServiceImpl implements DirectorService {
     private final DirectorRepository directorRepository;
@@ -30,10 +31,17 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public Director get(long id) {
-        return inMemoryCache.get(id)
-                .orElseGet(() -> inMemoryCache.put(id,  directorRepository
-                        .findById(id).orElse(null)));
+    public Director get(Long id) {
+        Optional<Director> cachedDirector = inMemoryCache.get(id);
+        if (cachedDirector.isPresent()) {
+            log.info("Director {} fetched from cache.", id);
+            return cachedDirector.get();
+        } else {
+            Director director = directorRepository.findById(id).orElseThrow();
+            inMemoryCache.put(id, director);
+            log.info("Director {} fetched from database and cached.", id);
+            return director;
+        }
     }
 
     @Override

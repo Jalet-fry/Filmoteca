@@ -6,7 +6,7 @@ import org.example.model.db.Actor;
 public interface ActorService {
     void create(Actor actor);
 
-    Actor get(long id);
+    Actor get(Long id);
 
     List<Actor> getAll();
 

@@ -195,24 +195,28 @@ public class FilmServiceImpl implements FilmService {
             existed.setActors(null);
         } else {
             Map<Long, Actor> existingActorsMap = existed.getActors().stream()
-                    .collect(Collectors.toMap(Actor::getId, identity()));
-            film.getActors().forEach(actor -> {
-                if (actor.getId() != 0) {
-                    Actor oldActor = existingActorsMap.get(actor.getId());
-                    if (oldActor == null) {
-                        oldActor = actorRepository.findById(actor.getId()).orElseThrow();
-                        existed.getActors().add(oldActor);
-                    }
-                    oldActor.updateForPut(actor);
-                } else {
-                    existed.getActors().add(actorRepository
-                            .getByFirstNameAndSecondNameAndLastName(
-                                    actor.getFirstName(),
-                                    actor.getSecondName(),
-                                    actor.getLastName())
-                            .orElse(actor));
-                }
-            });
+                    .collect(Collectors.toMap(Actor::getId, actor -> actor));
+            List<Actor> updatedActors = film.getActors().stream()
+                    .map(actor -> {
+                        if (actor.getId() != 0) {
+                            Actor oldActor = existingActorsMap.get(actor.getId());
+                            if (oldActor == null) {
+                                oldActor = actorRepository.findById(actor.getId()).orElseThrow();
+                            }
+                            oldActor.updateForPut(actor);
+                            return oldActor;
+                        } else {
+                            return actorRepository
+                                    .getByFirstNameAndSecondNameAndLastName(
+                                            actor.getFirstName(),
+                                            actor.getSecondName(),
+                                            actor.getLastName())
+                                    .orElse(actor);
+                        }
+                    })
+                    .collect(Collectors.toList());
+
+            existed.setActors(updatedActors);
         }
     }
 

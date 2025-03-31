@@ -6,7 +6,7 @@ import org.example.model.db.Director;
 public interface DirectorService {
     void create(Director director);
 
-    Director get(long id);
+    Director get(Long id);
 
     List<Director> getAll();  // Новый метод
 
