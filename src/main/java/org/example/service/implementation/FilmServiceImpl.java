@@ -7,10 +7,11 @@ import static java.util.function.Function.identity;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.example.annotations.CacheBean;
 import org.example.exception.FilmAlreadyExists;
 import org.example.model.db.Actor;
@@ -21,11 +22,11 @@ import org.example.repository.DirectorRepository;
 import org.example.repository.FilmRepository;
 import org.example.service.FilmService;
 import org.example.service.InMemoryCache;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class FilmServiceImpl implements FilmService {
     private final ActorRepository actorRepository;
@@ -39,11 +40,29 @@ public class FilmServiceImpl implements FilmService {
         return filmRepository.findByTitle(title);
     }
 
+    /*
+        @Override
+        public Film get(Long id) {
+            Film result = inMemoryCache.get(id)
+                    .orElseGet(() -> inMemoryCache.put(id, filmRepository
+                            .findById(id).orElseThrow()));
+            log.info("get: {}", result);
+            return result;
+        }
+    */
+
     @Override
     public Film get(Long id) {
-        return inMemoryCache.get(id)
-                .orElseGet(() -> inMemoryCache.put(id, filmRepository
-                        .findById(id).orElse(null)));
+        Optional<Film> cachedFilm = inMemoryCache.get(id);
+        if (cachedFilm.isPresent()) {
+            log.info("Film {} fetched from cache.", id);
+            return cachedFilm.get();
+        } else {
+            Film film = filmRepository.findById(id).orElseThrow();
+            inMemoryCache.put(id, film);
+            log.info("Film {} fetched from database and cached.", id);
+            return film;
+        }
     }
 
     @Override
