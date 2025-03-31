@@ -76,7 +76,7 @@ public class Convert {
     }
 
     public static ActorDto toDto(Actor from) {
-        return toDto(from, 2);
+        return toDto(from, 1);
     }
 
     private static ActorDto toDto(Actor from, int depth) {
@@ -98,7 +98,7 @@ public class Convert {
     }
 
     public static DirectorDto toDto(Director from) {
-        return toDto(from, 2);
+        return toDto(from, 1);
     }
 
     public static DirectorDto toDto(Director from, int depth) {
@@ -121,7 +121,7 @@ public class Convert {
     }
 
     public static FilmDto toDto(Film from) {
-        return toDto(from, 2);
+        return toDto(from, 1);
     }
 
     public static FilmDto toDto(Film from, int depth) {
