@@ -1,0 +1,9 @@
+logging:
+  level:
+    root: INFO
+    org.example.service.implementation: Debug
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+    file: "%d %p %c{1.} [%t] %m%n"
+  file:
+    name: app.log
