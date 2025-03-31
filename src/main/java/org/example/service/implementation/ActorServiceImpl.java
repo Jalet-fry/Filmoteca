@@ -3,8 +3,9 @@ package org.example.service.implementation;
 
 
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.example.annotations.CacheBean;
 import org.example.model.db.Actor;
 import org.example.repository.ActorRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class ActorServiceImpl implements ActorService {
     private final ActorRepository actorRepository;
@@ -27,10 +29,17 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public Actor get(long id) {
-        return inMemoryCache.get(id)
-                .orElseGet(() -> inMemoryCache.put(id, actorRepository
-                        .findById(id).orElse(null)));
+    public Actor get(Long id) {
+        Optional<Actor> cachedActor = inMemoryCache.get(id);
+        if (cachedActor.isPresent()) {
+            log.info("Actor {} fetched from cache.", id);
+            return cachedActor.get();
+        } else {
+            Actor actor = actorRepository.findById(id).orElseThrow();
+            inMemoryCache.put(id, actor);
+            log.info("Actor {} fetched from database and cached.", id);
+            return actor;
+        }
     }
 
     @Override

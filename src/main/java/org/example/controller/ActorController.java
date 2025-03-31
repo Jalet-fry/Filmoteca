@@ -69,7 +69,7 @@ public class ActorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable int id) {
+    public ResponseEntity<?> get(@PathVariable Long id) {
         Optional<Actor> actor = Optional.ofNullable(actorService.get(id));
         return actor.map(entity -> ResponseEntity.ok(toDto(entity)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
