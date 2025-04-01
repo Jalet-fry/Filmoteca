@@ -1,5 +1,6 @@
 package org.example.service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public interface InMemoryCache<K, V>  {
@@ -8,4 +9,6 @@ public interface InMemoryCache<K, V>  {
     V put(K id, V value);
 
     void del(K id);
+
+    Collection<V> getAllValues();
 }

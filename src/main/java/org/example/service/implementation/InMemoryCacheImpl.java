@@ -1,8 +1,8 @@
 package org.example.service.implementation;
 
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -39,4 +39,8 @@ public class InMemoryCacheImpl<K, V> implements InMemoryCache<K, V> {
         cache.remove(id);
     }
 
+    @Override
+    public Collection<V> getAllValues() {
+        return cache.values();
+    }
 }

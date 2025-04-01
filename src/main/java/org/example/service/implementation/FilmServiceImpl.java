@@ -253,4 +253,26 @@ public class FilmServiceImpl implements FilmService {
         inMemoryCache.del(id);
         filmRepository.deleteById(id);
     }
+
+    @Transactional
+    public void removeActorFromFilmsCache(Long actorId) {
+        inMemoryCache.getAllValues().forEach(film -> {
+            if (film.getActors() != null) {
+                film.getActors().removeIf(actor -> actor.getId() == actorId);
+            }
+        });
+    }
+
+    /**
+     * Удаляет режиссера из всех фильмов в кэше.
+     * @param directorId ID режиссера, которого нужно удалить.
+     */
+    @Transactional
+    public void removeDirectorFromFilmsCache(Long directorId) {
+        inMemoryCache.getAllValues().forEach(film -> {
+            if (film.getDirector() != null && film.getDirector().getId() == directorId) {
+                film.setDirector(null);
+            }
+        });
+    }
 }
