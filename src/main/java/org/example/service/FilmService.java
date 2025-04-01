@@ -26,6 +26,7 @@ public interface FilmService {
     void delete(long id);
 
     void removeActorFromFilmsCache(Long actorId);
+
     void removeDirectorFromFilmsCache(Long directorId);
 }
 
