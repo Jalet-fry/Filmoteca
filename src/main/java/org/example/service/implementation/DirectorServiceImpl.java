@@ -11,6 +11,7 @@ import org.example.model.db.Actor;
 import org.example.model.db.Director;
 import org.example.repository.DirectorRepository;
 import org.example.service.DirectorService;
+import org.example.service.FilmService;
 import org.example.service.InMemoryCache;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class DirectorServiceImpl implements DirectorService {
     private final DirectorRepository directorRepository;
+    private final FilmService filmService;
     @CacheBean("directors")
     private final InMemoryCache<Long, Director> inMemoryCache;
 
@@ -71,8 +73,9 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public void delete(long id) {
-        inMemoryCache.del(id);
         directorRepository.deleteById(id);
+        filmService.removeDirectorFromFilmsCache(id);
+        inMemoryCache.del(id);
     }
 
     @Override
