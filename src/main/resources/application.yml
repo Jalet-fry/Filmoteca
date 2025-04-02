@@ -7,3 +7,7 @@ logging:
     file: "%d %p %c{1.} [%t] %m%n"
   file:
     name: app.log
+  logback:
+    rollingpolicy:
+      max-file-size: 0   # отключаем ротацию по размеру
+      clean-history-on-start: false

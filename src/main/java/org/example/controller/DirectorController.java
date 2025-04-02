@@ -3,6 +3,7 @@ package org.example.controller;
 import static org.example.model.Convert.toDto;
 import static org.example.model.Convert.toEntity;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class DirectorController {
     private final DirectorService directorService;
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody DirectorDto directorDto) {
+    public ResponseEntity<String> create(@Valid @RequestBody DirectorDto directorDto) {
         Director director = toEntity(directorDto);
         director.setId(0);
         director.setFilms(null);
@@ -39,13 +40,13 @@ public class DirectorController {
     }
 
     @PutMapping
-    public ResponseEntity<String> put(@RequestBody DirectorDto directorDto) {
+    public ResponseEntity<String> put(@Valid @RequestBody DirectorDto directorDto) {
         directorService.put(toEntity(directorDto));
         return ResponseEntity.status(200).body("Director changed successfully");
     }
 
     @PatchMapping
-    public ResponseEntity<String> patch(@RequestBody DirectorDto directorDto) {
+    public ResponseEntity<String> patch(@Valid @RequestBody DirectorDto directorDto) {
         directorService.patch(toEntity(directorDto));
         return ResponseEntity.status(200).body("Director changed successfully");
     }

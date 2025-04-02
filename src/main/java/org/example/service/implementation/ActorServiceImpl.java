@@ -5,8 +5,10 @@ package org.example.service.implementation;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.example.annotations.CacheBean;
+import org.example.exception.ActorAlreadyExists;
 import org.example.model.db.Actor;
 import org.example.repository.ActorRepository;
 import org.example.service.ActorService;
@@ -24,10 +26,15 @@ public class ActorServiceImpl implements ActorService {
     @CacheBean("actors")
     private final InMemoryCache<Long, Actor> inMemoryCache;
 
+    @SneakyThrows
     @Override
     public void create(Actor actor) {
-        actorRepository.save(actor);
-        inMemoryCache.put(actor.getId(), actor);
+        try {
+            actorRepository.save(actor);
+            inMemoryCache.put(actor.getId(), actor);
+        } catch (Exception ex) {
+            throw new ActorAlreadyExists(actor.toString());
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.example.controller;
 import static org.example.model.Convert.toDto;
 import static org.example.model.Convert.toEntity;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class ActorController {
     private final ActorService actorService;
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody ActorDto actorDto) {
+    public ResponseEntity<String> create(@Valid @RequestBody ActorDto actorDto) {
         Actor actor = toEntity(actorDto);
         actor.setId(0);
         actor.setFilms(null);
@@ -40,7 +41,7 @@ public class ActorController {
     }
 
     @PutMapping
-    public ResponseEntity<String> put(@RequestBody ActorDto actorDto) {
+    public ResponseEntity<String> put(@Valid @RequestBody ActorDto actorDto) {
         Actor actor = toEntity(actorDto);
         actor.setFilms(null);
         actorService.put(actor);
@@ -48,7 +49,7 @@ public class ActorController {
     }
 
     @PatchMapping
-    public ResponseEntity<String> patch(@RequestBody ActorDto actorDto) {
+    public ResponseEntity<String> patch(@Valid @RequestBody ActorDto actorDto) {
         Actor actor = toEntity(actorDto);
         actor.setFilms(null);
         actorService.patch(actor);

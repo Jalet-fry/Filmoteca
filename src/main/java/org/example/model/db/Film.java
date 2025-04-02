@@ -69,4 +69,8 @@ public class Film {
         this.setLink(film.getLink());
     }
 
+    public String toString() {
+        return "{} {}".formatted(title, year);
+    }
+
 }

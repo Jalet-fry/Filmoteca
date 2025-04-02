@@ -4,6 +4,7 @@ import static org.example.model.Convert.toDto;
 import static org.example.model.Convert.toDtoList;
 import static org.example.model.Convert.toEntity;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class FilmController {
 
     @SneakyThrows
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody FilmDto filmDto) {
+    public ResponseEntity<String> create(@Valid @RequestBody FilmDto filmDto) {
         Film film = toEntity(filmDto);
         film.setId(0);
         filmService.create(film);
@@ -41,13 +42,13 @@ public class FilmController {
     }
 
     @PutMapping
-    public ResponseEntity<String> put(@RequestBody FilmDto filmDto) {
+    public ResponseEntity<String> put(@Valid @RequestBody FilmDto filmDto) {
         filmService.put(toEntity(filmDto));
         return ResponseEntity.status(200).body("Film changed successfully");
     }
 
     @PatchMapping
-    public ResponseEntity<String> patch(@RequestBody FilmDto filmDto) {
+    public ResponseEntity<String> patch(@Valid @RequestBody FilmDto filmDto) {
         filmService.patch(toEntity(filmDto));
         return ResponseEntity.status(200).body("Film changed successfully");
     }

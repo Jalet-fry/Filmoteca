@@ -58,4 +58,8 @@ public class Actor {
         this.setSecondName(newActor.getSecondName());
         this.setLastName(newActor.getLastName());
     }
+
+    public String toString() {
+        return "{} {} {}".formatted(firstName, secondName, lastName);
+    }
 }

@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,38 +22,20 @@ public class LogController {
 
     private static final String LOG_FILE = "app.log";
 
-    @GetMapping
-    public List<String> getLogsByDate(@RequestParam String date) throws IOException {
+    @GetMapping(produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<Resource> getLogsByDate(@RequestParam String date) throws IOException {
         Path filePath = Paths.get(LOG_FILE);
         if (!Files.exists(filePath)) {
             throw new FileNotFoundException("Log file not found!");
         }
-
-        return Files.lines(filePath)
+        String str = String.join("", Files.lines(filePath)
                 .filter(line -> line.startsWith(date))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+        Resource resource = new ByteArrayResource(str.getBytes());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                  "attachment; filename=\"Filtered.log\"")
+                .contentLength(str.length())
+                .body(resource);
     }
 }
-
-//    @GetMapping(value = "/api/logs/download", produces = MediaType.TEXT_PLAIN_VALUE)
-//    public ResponseEntity<Resource> downloadLogFile() throws IOException {
-//        // Полный путь к файлу
-//        Path filePath = Paths.get(LOG_DIR + LOG_FILE).toAbsolutePath().normalize();
-//        File logFile = filePath.toFile();
-//
-//        // Проверяем, существует ли файл
-//        if (!logFile.exists()) {
-//            throw new IOException("Log file not found: " + filePath);
-//        }
-//
-//        // Создаем Resource для файла
-//        Resource resource = new UrlResource(filePath.toUri());
-//
-//        // Настраиваем заголовки для скачивания
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION,
-//                  "attachment; filename=\"" + logFile.getName() + "\"")
-//                .contentLength(logFile.length())
-//                .body(resource);
-//    }
-//}

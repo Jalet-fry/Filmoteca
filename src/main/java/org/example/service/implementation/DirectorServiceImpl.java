@@ -5,9 +5,10 @@ package org.example.service.implementation;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.example.annotations.CacheBean;
-import org.example.model.db.Actor;
+import org.example.exception.DirectorAlreadyExists;
 import org.example.model.db.Director;
 import org.example.repository.DirectorRepository;
 import org.example.service.DirectorService;
@@ -26,10 +27,14 @@ public class DirectorServiceImpl implements DirectorService {
     private final InMemoryCache<Long, Director> inMemoryCache;
 
     @Override
-    //@Transactional
+    @SneakyThrows
     public void create(Director director) {
-        directorRepository.save(director);
-        inMemoryCache.put(director.getId(), director);
+        try {
+            directorRepository.save(director);
+            inMemoryCache.put(director.getId(), director);
+        } catch (Exception ex) {
+            throw new DirectorAlreadyExists(director.toString());
+        }
     }
 
     @Override

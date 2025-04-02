@@ -107,7 +107,7 @@ public class FilmServiceImpl implements FilmService {
             var existedFilm = filmRepository.getByTitleAndYearAndDirectorId(
                     film.getTitle(), film.getYear(), null);
             if (existedFilm != null) {
-                throw new FilmAlreadyExists(existedFilm.getTitle());
+                throw new FilmAlreadyExists(existedFilm.toString());
             }
         }
         filmRepository.save(film);
