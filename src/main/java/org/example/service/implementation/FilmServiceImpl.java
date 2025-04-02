@@ -40,17 +40,6 @@ public class FilmServiceImpl implements FilmService {
         return filmRepository.findByTitle(title);
     }
 
-    /*
-        @Override
-        public Film get(Long id) {
-            Film result = inMemoryCache.get(id)
-                    .orElseGet(() -> inMemoryCache.put(id, filmRepository
-                            .findById(id).orElseThrow()));
-            log.info("get: {}", result);
-            return result;
-        }
-    */
-
     @Override
     public Film get(Long id) {
         Optional<Film> cachedFilm = inMemoryCache.get(id);

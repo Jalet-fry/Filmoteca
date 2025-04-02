@@ -64,7 +64,7 @@ public class DirectorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable Long id) {
+    public ResponseEntity<DirectorDto> get(@PathVariable Long id) {
         Optional<Director> director = Optional.ofNullable(directorService.get(id));
         return director.map(entity -> ResponseEntity.ok(toDto(entity)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
