@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 @AllArgsConstructor
 @Setter
@@ -16,8 +17,11 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ActorDto {
     private long id;
+    @Length(max = 20)
     private String firstName;
+    @Length(max = 20)
     private String secondName;
+    @Length(max = 20)
     private String lastName;
     private List<FilmDto> films;
 }

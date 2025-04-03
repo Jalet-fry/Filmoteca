@@ -2,8 +2,11 @@ package org.example.controller;
 
 import static org.example.model.Convert.toDto;
 import static org.example.model.Convert.toEntity;
+import static org.example.utils.Utils.MAXTEXTSIZE;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -52,20 +55,22 @@ public class DirectorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id) {
+    public ResponseEntity<String> delete(@Valid @Min(1) @PathVariable long id) {
         directorService.delete(id);
         return ResponseEntity.status(200).body("Director deleted successfully");
     }
 
     @GetMapping
-    public ResponseEntity<DirectorDto> getByName(@RequestParam String name) {
+    public ResponseEntity<DirectorDto> getByName(
+            @Valid @Size(max = MAXTEXTSIZE)
+            @RequestParam String name) {
         Optional<Director> director = Optional.ofNullable(directorService.getByName(name));
         return director.map(entity -> ResponseEntity.ok(toDto(entity)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DirectorDto> get(@PathVariable Long id) {
+    public ResponseEntity<DirectorDto> get(@Valid @Min(1) @PathVariable Long id) {
         Optional<Director> director = Optional.ofNullable(directorService.get(id));
         return director.map(entity -> ResponseEntity.ok(toDto(entity)))
                 .orElseGet(() -> ResponseEntity.notFound().build());

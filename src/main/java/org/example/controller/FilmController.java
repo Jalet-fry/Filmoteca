@@ -3,8 +3,11 @@ package org.example.controller;
 import static org.example.model.Convert.toDto;
 import static org.example.model.Convert.toDtoList;
 import static org.example.model.Convert.toEntity;
+import static org.example.utils.Utils.MAXTEXTSIZE;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -54,13 +57,14 @@ public class FilmController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable long id) {
+    public ResponseEntity<String> delete(@Valid @Min(1) @PathVariable long id) {
         filmService.delete(id);
         return ResponseEntity.status(200).body("Film deleted successfully");
     }
 
     @GetMapping
-    public ResponseEntity<List<FilmDto>> getByTitle(@RequestParam String title) {
+    public ResponseEntity<List<FilmDto>> getByTitle(
+            @Valid @Size(max = MAXTEXTSIZE) @RequestParam String title) {
         List<Film> films = filmService.getByTitle(title);
         if (films != null && !films.isEmpty()) {
             return ResponseEntity.ok(toDtoList(films));
@@ -70,7 +74,7 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FilmDto> get(@PathVariable Long id) {
+    public ResponseEntity<FilmDto> get(@Valid @Min(1) @PathVariable Long id) {
         Optional<Film> film = Optional.ofNullable(filmService.get(id));
         return film.map(entity -> ResponseEntity.ok(toDto(entity)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -78,8 +82,8 @@ public class FilmController {
 
     @GetMapping("/all")
     public ResponseEntity<List<FilmDto>> getAllFilms(
-            @RequestParam(required = false) String director,
-            @RequestParam(required = false) String actor
+            @Valid @Size(max = MAXTEXTSIZE) @RequestParam(required = false) String director,
+            @Valid @Size(max = MAXTEXTSIZE) @RequestParam(required = false) String actor
     ) {
         List<Film> films;
         if (actor != null && director != null) {

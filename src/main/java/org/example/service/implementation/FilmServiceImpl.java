@@ -2,9 +2,8 @@
 package org.example.service.implementation;
 
 
-import static java.util.function.Function.identity;
-
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Min;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -249,7 +248,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(@Min(1) long id) {
         inMemoryCache.del(id);
         filmRepository.deleteById(id);
     }
