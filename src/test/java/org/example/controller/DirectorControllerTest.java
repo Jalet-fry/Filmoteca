@@ -1,14 +1,13 @@
-package filmoteca.example.filmoteca;
+package org.example.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FilmotecaApplicationTests {
+public class DirectorControllerTest {
 
     @Test
     void contextLoads() {
         //It will be
     }
-
 }
