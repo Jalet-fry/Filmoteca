@@ -41,11 +41,11 @@ public class DirectorController {
 
     @Operation(summary = "Create a new director")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Director created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content)
+        @ApiResponse(responseCode = "201", description = "Director created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data",
+                content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+                content = @Content)
     })
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody DirectorDto directorDto) {

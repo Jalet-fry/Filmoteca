@@ -23,19 +23,19 @@ public class LabControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ActorAlreadyExists.class)
     protected ResponseEntity<Object> handleActorAlreadyExists(Exception ex, WebRequest request) {
-        String apiError = "Actor '{}' already exists\n".formatted(ex.getMessage());
+        String apiError = "Actor '{0}' already exists\n".formatted(ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(DirectorAlreadyExists.class)
     protected ResponseEntity<Object> handleDirectorAlreadyExists(Exception ex, WebRequest request) {
-        String apiError = "Director '{}' already exists\n".formatted(ex.getMessage());
+        String apiError = "Director '{0}' already exists\n".formatted(ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(FilmAlreadyExists.class)
     protected ResponseEntity<Object> handleFilmAlreadyExists(Exception ex, WebRequest request) {
-        String apiError = "Film '{}' already exists\n".formatted(ex.getMessage());
+        String apiError = "Film '{0}' already exists\n".formatted(ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 }

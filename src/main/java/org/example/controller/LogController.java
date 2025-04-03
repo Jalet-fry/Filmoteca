@@ -30,7 +30,7 @@ public class LogController {
         }
         String str = String.join("", Files.lines(filePath)
                 .filter(line -> line.startsWith(date))
-                .collect(Collectors.toList()));
+                .toList());
         Resource resource = new ByteArrayResource(str.getBytes());
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,

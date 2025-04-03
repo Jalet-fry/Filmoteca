@@ -41,12 +41,12 @@ public class ActorServiceImpl implements ActorService {
     public Actor get(Long id) {
         Optional<Actor> cachedActor = inMemoryCache.get(id);
         if (cachedActor.isPresent()) {
-            log.info("Actor {} fetched from cache.", id);
+            log.info("Actor {0} fetched from cache.", id);
             return cachedActor.get();
         } else {
             Actor actor = actorRepository.findById(id).orElseThrow();
             inMemoryCache.put(id, actor);
-            log.info("Actor {} fetched from database and cached.", id);
+            log.info("Actor {0} fetched from database and cached.", id);
             return actor;
         }
     }

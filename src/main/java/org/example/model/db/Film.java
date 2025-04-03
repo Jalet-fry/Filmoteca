@@ -70,7 +70,7 @@ public class Film {
     }
 
     public String toString() {
-        return "{} {}".formatted(title, year);
+        return "{0} {1}".formatted(title, year);
     }
 
 }
