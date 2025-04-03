@@ -4,6 +4,11 @@ import static org.example.model.Convert.toDto;
 import static org.example.model.Convert.toEntity;
 import static org.example.utils.Utils.MAXTEXTSIZE;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
@@ -30,9 +35,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/directors")
+@Tag(name = "Director Controller", description = "API for managing film directors")
 public class DirectorController {
     private final DirectorService directorService;
 
+    @Operation(summary = "Create a new director")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Director created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content)
+    })
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody DirectorDto directorDto) {
         Director director = toEntity(directorDto);
