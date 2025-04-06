@@ -69,14 +69,6 @@ public class ActorController {
     })
     @PostMapping("/bulk")
     public ResponseEntity<String> createActorsBulk(@Valid @RequestBody List<ActorDto> actorDtos) {
-//        List<Actor> actors = actorDtos.stream()
-//                .map(dto -> {
-//                    Actor actor = toEntity(dto);
-//                    actor.setId(0);
-//                    actor.setFilms(null);
-//                    return actor;
-//                })
-//                .toList();
         List<Actor> actors = toEntityListActors(actorDtos);
         actorService.createAll(actors);
         return ResponseEntity.status(201).body("Successfully created " + actors.size() + " actors");

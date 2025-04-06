@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
 public interface ActorRepository extends JpaRepository<Actor, Long> {
     Optional<Actor> getByFirstNameAndSecondNameAndLastName(
             String firstName, String secondName, String lastName);
-//    List<Actor> saveAll(List<Actor> actors);
 }

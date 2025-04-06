@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
 public interface DirectorRepository extends JpaRepository<Director, Long> {
     Optional<Director> getByFirstNameAndSecondNameAndLastName(
             String firstName, String secondName, String lastName);
-//    List<Director> saveAll(List<Director> directors);
 }

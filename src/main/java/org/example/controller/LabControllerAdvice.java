@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.example.exception.ActorAlreadyExists;
+import org.example.exception.BulkOperation;
 import org.example.exception.DirectorAlreadyExists;
 import org.example.exception.FilmAlreadyExists;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +22,6 @@ public class LabControllerAdvice extends ResponseEntityExceptionHandler
         implements LabControllerAdviceInterface {
 
     // 1. Переопределяем обработку MethodArgumentNotValidException
-
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -72,10 +72,16 @@ public class LabControllerAdvice extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleFilmAlreadyExists(Exception ex, WebRequest request) {
         String apiError;
         if (ex.getMessage() == null) {
-            apiError = "This film is already exists";
+            apiError = "Film already exists";
         } else {
             apiError = String.format("Film '%s' already exists", ex.getMessage());
         }
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BulkOperation.class)
+    protected ResponseEntity<Object> handleBulkOperation(Exception ex, WebRequest request) {
+        String apiError = String.format("Bulk %s creation failed", ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 }

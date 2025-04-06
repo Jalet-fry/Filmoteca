@@ -11,8 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface FilmRepository extends JpaRepository<Film, Long> {
     List<Film> findByTitle(String title);
 
-//    List<Film> saveAll(List<Film> films);
-
     Film getByTitleAndYearAndDirectorId(String title, int year, Long directorId);
 
     @Query(value = """

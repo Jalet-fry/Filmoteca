@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.example.annotations.CacheBean;
+import org.example.exception.BulkOperation;
 import org.example.exception.DirectorAlreadyExists;
 import org.example.model.db.Director;
 import org.example.repository.DirectorRepository;
@@ -40,7 +41,6 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @SneakyThrows
-    @Transactional
     @Override
     public void createAll(List<Director> directors) {
         // Зануляем ID для всех режиссёров
@@ -50,7 +50,7 @@ public class DirectorServiceImpl implements DirectorService {
             List<Director> savedDirectors = directorRepository.saveAll(directors);
             savedDirectors.forEach(director -> inMemoryCache.put(director.getId(), director));
         } catch (Exception ex) {
-            throw new DirectorAlreadyExists("Bulk operation failed: " + ex.getMessage());
+            throw new BulkOperation("directors");
         }
     }
 

@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.example.annotations.CacheBean;
+import org.example.exception.BulkOperation;
 import org.example.exception.FilmAlreadyExists;
 import org.example.model.db.Actor;
 import org.example.model.db.Director;
@@ -87,7 +88,7 @@ public class FilmServiceImpl implements FilmService {
 
     @SneakyThrows
     @Override
-    @Transactional
+    //@Transactional
     public void create(Film film) {
         try {
             processFilmRelations(film);
@@ -105,7 +106,6 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @SneakyThrows
-    @Transactional
     @Override
     public void createAll(List<Film> films) {
         films.forEach(film -> {
@@ -116,7 +116,7 @@ public class FilmServiceImpl implements FilmService {
             List<Film> savedFilms = filmRepository.saveAll(films);
             savedFilms.forEach(film -> inMemoryCache.put(film.getId(), film));
         } catch (Exception ex) {
-            throw new FilmAlreadyExists("Bulk operation failed: " + ex.getMessage());
+            throw new BulkOperation("films");
         }
     }
 

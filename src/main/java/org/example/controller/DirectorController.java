@@ -74,18 +74,12 @@ public class DirectorController {
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping("/bulk")
-    public ResponseEntity<String> createDirectorsBulk(@Valid @RequestBody List<DirectorDto> directorDtos) {
-//        List<Actor> directors = directorDtos.stream()
-//                .map(dto -> {
-//                    Actor director = toEntity(dto);
-//                    director.setId(0);
-//                    director.setFilms(null);
-//                    return director;
-//                })
-//                .toList();
+    public ResponseEntity<String> createDirectorsBulk(
+            @Valid @RequestBody List<DirectorDto> directorDtos) {
         List<Director> directors = toEntityListDirectors(directorDtos);
         directorService.createAll(directors);
-        return ResponseEntity.status(201).body("Successfully created " + directors.size() + " directors");
+        return ResponseEntity.status(201).body(
+                "Successfully created " + directors.size() + " directors");
     }
 
     @Operation(summary = "Update a director with full details")

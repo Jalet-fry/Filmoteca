@@ -11,6 +11,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.example.annotations.CacheBean;
 import org.example.exception.ActorAlreadyExists;
+import org.example.exception.BulkOperation;
 import org.example.model.db.Actor;
 import org.example.repository.ActorRepository;
 import org.example.service.ActorService;
@@ -36,12 +37,14 @@ public class ActorServiceImpl implements ActorService {
             actorRepository.save(actor);
             inMemoryCache.put(actor.getId(), actor);
         } catch (Exception ex) {
-            throw new ActorAlreadyExists(actor.toString());
+            String errorMessage = "Actor " + actor.toString() + " already exists";
+            log.error(errorMessage); // Логирование сообщения
+            throw new ActorAlreadyExists(errorMessage);
+            //throw new ActorAlreadyExists(actor.toString());
         }
     }
 
     @SneakyThrows
-    @Transactional
     @Override
     public void createAll(List<Actor> actors) {
         actors.forEach(actor -> actor.setId(0));
@@ -49,10 +52,8 @@ public class ActorServiceImpl implements ActorService {
         try {
             List<Actor> savedActors = actorRepository.saveAll(actors);
             savedActors.forEach(actor -> inMemoryCache.put(actor.getId(), actor));
-        } catch (DataIntegrityViolationException ex) {
-            throw new ActorAlreadyExists("One or more actors already exist: " + ex.getMessage());
         } catch (Exception ex) {
-            throw new ActorAlreadyExists("Bulk operation failed: " + ex.getMessage());
+            throw new BulkOperation("actors");
         }
     }
 
