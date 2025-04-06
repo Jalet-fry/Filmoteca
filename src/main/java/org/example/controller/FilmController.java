@@ -43,10 +43,13 @@ public class FilmController {
 
     @Operation(summary = "Create a new film")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Film created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Film already exists", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "201", description = "Film created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data",
+			content = @Content),
+        @ApiResponse(responseCode = "409", description = "Film already exists",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @SneakyThrows
     @PostMapping
@@ -59,10 +62,13 @@ public class FilmController {
 
     @Operation(summary = "Update a film with full details")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Film updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Film not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Film updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Film not found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @PutMapping
     public ResponseEntity<String> put(@Valid @RequestBody FilmDto filmDto) {
@@ -72,10 +78,13 @@ public class FilmController {
 
     @Operation(summary = "Partially update a film") // Добавить
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Film partially updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Film not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Film partially updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Film not found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @PatchMapping
     public ResponseEntity<String> patch(@Valid @RequestBody FilmDto filmDto) {
@@ -85,10 +94,13 @@ public class FilmController {
 
     @Operation(summary = "Delete a film by ID") // Добавить
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Film deleted successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Film not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Film deleted successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid ID supplied",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Film not found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@Valid @Min(1) @PathVariable long id) {
@@ -98,10 +110,13 @@ public class FilmController {
 
     @Operation(summary = "Get films by title") // Добавить
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Films found"),
-            @ApiResponse(responseCode = "400", description = "Invalid title supplied", content = @Content),
-            @ApiResponse(responseCode = "404", description = "No films found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Films found"),
+        @ApiResponse(responseCode = "400", description = "Invalid title supplied",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "No films found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @GetMapping
     public ResponseEntity<List<FilmDto>> getByTitle(
@@ -116,10 +131,13 @@ public class FilmController {
 
     @Operation(summary = "Get a film by ID") // Добавить
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Film found"),
-            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Film not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Film found"),
+        @ApiResponse(responseCode = "400", description = "Invalid ID supplied",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Film not found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<FilmDto> get(@Valid @Min(1) @PathVariable Long id) {
@@ -130,9 +148,11 @@ public class FilmController {
 
     @Operation(summary = "Get all films with optional filters")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "List of films"),
-            @ApiResponse(responseCode = "400", description = "Invalid filter parameters", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "List of films"),
+        @ApiResponse(responseCode = "400", description = "Invalid filter parameters",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @GetMapping("/all")
     public ResponseEntity<List<FilmDto>> getAllFilms(

@@ -43,11 +43,14 @@ public class DirectorController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Director created successfully"),
         @ApiResponse(responseCode = "400", description = "Invalid input data",
-                content = @Content),
+
+			content = @Content),
         @ApiResponse(responseCode = "409", description = "Director already exists",
-                content = @Content),
+
+			content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal server error",
-                content = @Content)
+
+			content = @Content)
     })
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody DirectorDto directorDto) {
@@ -60,13 +63,16 @@ public class DirectorController {
 
     @Operation(summary = "Update a director with full details")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Director updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data",
-                    content = @Content),
-            @ApiResponse(responseCode = "409", description = "Director already exists",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content)
+        @ApiResponse(responseCode = "201", description = "Director updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data",
+
+			content = @Content),
+        @ApiResponse(responseCode = "409", description = "Director already exists",
+
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+
+			content = @Content)
     })
     @PutMapping
     public ResponseEntity<String> put(@Valid @RequestBody DirectorDto directorDto) {
@@ -76,13 +82,16 @@ public class DirectorController {
 
     @Operation(summary = "Partially update a director")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Director partially updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data",
-                    content = @Content),
-            @ApiResponse(responseCode = "404", description = "Director not found",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content)
+        @ApiResponse(responseCode = "200", description = "Director partially updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data",
+
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Director not found",
+
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+
+			content = @Content)
     })
     @PatchMapping
     public ResponseEntity<String> patch(@Valid @RequestBody DirectorDto directorDto) {
@@ -92,13 +101,16 @@ public class DirectorController {
 
     @Operation(summary = "Delete a director by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Director deleted successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid ID supplied",
-                    content = @Content),
-            @ApiResponse(responseCode = "404", description = "Director not found",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content)
+        @ApiResponse(responseCode = "200", description = "Director deleted successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid ID supplied",
+
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Director not found",
+
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+
+			content = @Content)
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@Valid @Min(1) @PathVariable long id) {
@@ -108,10 +120,13 @@ public class DirectorController {
 
     @Operation(summary = "Get a director by name")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Director found"),
-            @ApiResponse(responseCode = "400", description = "Invalid name supplied", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Director not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Director found"),
+        @ApiResponse(responseCode = "400", description = "Invalid name supplied",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Director not found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @GetMapping
     public ResponseEntity<DirectorDto> getByName(
@@ -124,10 +139,13 @@ public class DirectorController {
 
     @Operation(summary = "Get a director by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Director found"),
-            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Director not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Director found"),
+        @ApiResponse(responseCode = "400", description = "Invalid ID supplied",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Director not found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<DirectorDto> get(@Valid @Min(1) @PathVariable Long id) {
@@ -138,8 +156,9 @@ public class DirectorController {
 
     @Operation(summary = "Get all directors")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "List of all directors"),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "List of all directors"),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @GetMapping("/all")
     public ResponseEntity<List<DirectorDto>> getAllDirectors() {

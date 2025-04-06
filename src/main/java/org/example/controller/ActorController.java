@@ -42,10 +42,13 @@ public class ActorController {
 
     @Operation(summary = "Create a new actor") // Добавить
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Actor created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Actor already exists", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "201", description = "Actor created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data",
+			content = @Content),
+        @ApiResponse(responseCode = "409", description = "Actor already exists",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody ActorDto actorDto) {
@@ -58,10 +61,13 @@ public class ActorController {
 
     @Operation(summary = "Update an actor with full details")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Actor updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Actor not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Actor updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Actor not found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @PutMapping
     public ResponseEntity<String> put(@Valid @RequestBody ActorDto actorDto) {
@@ -73,10 +79,13 @@ public class ActorController {
 
     @Operation(summary = "Partially update an actor")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Actor partially updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Actor not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Actor partially updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Actor not found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @PatchMapping
     public ResponseEntity<String> patch(@Valid @RequestBody ActorDto actorDto) {
@@ -88,10 +97,13 @@ public class ActorController {
 
     @Operation(summary = "Delete an actor by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Actor deleted successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Actor not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Actor deleted successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid ID supplied",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Actor not found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@Valid @Min(1) @PathVariable long id) {
@@ -101,10 +113,13 @@ public class ActorController {
 
     @Operation(summary = "Get an actor by name")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Actor found"),
-            @ApiResponse(responseCode = "400", description = "Invalid name supplied", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Actor not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Actor found"),
+        @ApiResponse(responseCode = "400", description = "Invalid name supplied",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Actor not found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @GetMapping
     public ResponseEntity<ActorDto> getByName(
@@ -117,10 +132,13 @@ public class ActorController {
 
     @Operation(summary = "Get an actor by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Actor found"),
-            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Actor not found", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "Actor found"),
+        @ApiResponse(responseCode = "400", description = "Invalid ID supplied",
+			content = @Content),
+        @ApiResponse(responseCode = "404", description = "Actor not found",
+			content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<ActorDto> get(@Valid @Min(1) @PathVariable Long id) {
@@ -131,8 +149,9 @@ public class ActorController {
 
     @Operation(summary = "Get all actors")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "List of all actors"),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        @ApiResponse(responseCode = "200", description = "List of all actors"),
+        @ApiResponse(responseCode = "500", description = "Internal server error",
+			content = @Content)
     })
     @GetMapping("/all")
     public ResponseEntity<List<ActorDto>> getAllActors() {

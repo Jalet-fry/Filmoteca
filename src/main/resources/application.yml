@@ -1,13 +1,21 @@
+#logging:
+#  level:
+#    root: INFO
+#    org.example.service.implementation: Debug
+#  pattern:
+#    console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+#    file: "%d %p %c{1.} [%t] %m%n"
+#  file:
+#    name: app.log
+#  logback:
+#    rollingpolicy:
+#      max-file-size: 0   # отключаем ротацию по размеру
+#      clean-history-on-start: false
 logging:
-  level:
-    root: INFO
-    org.example.service.implementation: Debug
-  pattern:
-    console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
-    file: "%d %p %c{1.} [%t] %m%n"
   file:
     name: app.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"
   logback:
     rollingpolicy:
-      max-file-size: 0   # отключаем ротацию по размеру
-      clean-history-on-start: false
+      enabled: false # Полностью отключаем ротацию
