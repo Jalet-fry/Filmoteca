@@ -1,6 +1,8 @@
 package org.example.service;
 
+import jakarta.transaction.Transactional;
 import java.util.List;
+import lombok.SneakyThrows;
 import org.example.exception.FilmAlreadyExists;
 import org.example.model.db.Film;
 
@@ -18,6 +20,8 @@ public interface FilmService {
     Film get(Long id);
 
     List<Film> getAll();  // Новый метод
+
+    void createAll(List<Film> films);
 
     void put(Film entity);
 

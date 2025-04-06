@@ -2,6 +2,8 @@ package org.example.controller;
 
 import static org.example.model.Convert.toDto;
 import static org.example.model.Convert.toEntity;
+import static org.example.model.Convert.toEntityListActors;
+import static org.example.model.Convert.toEntityListDirectors;
 import static org.example.utils.Utils.MAXTEXTSIZE;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,8 +17,10 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.example.model.ActorDto;
 import org.example.model.Convert;
 import org.example.model.DirectorDto;
+import org.example.model.db.Actor;
 import org.example.model.db.Director;
 import org.example.service.DirectorService;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +63,29 @@ public class DirectorController {
         director.setFilms(null);
         directorService.create(director);
         return ResponseEntity.status(201).body("Director created successfully");
+    }
+
+
+    @Operation(summary = "Create multiple directors in bulk")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Actors created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data"),
+        @ApiResponse(responseCode = "409", description = "One or more directors already exist"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PostMapping("/bulk")
+    public ResponseEntity<String> createDirectorsBulk(@Valid @RequestBody List<DirectorDto> directorDtos) {
+//        List<Actor> directors = directorDtos.stream()
+//                .map(dto -> {
+//                    Actor director = toEntity(dto);
+//                    director.setId(0);
+//                    director.setFilms(null);
+//                    return director;
+//                })
+//                .toList();
+        List<Director> directors = toEntityListDirectors(directorDtos);
+        directorService.createAll(directors);
+        return ResponseEntity.status(201).body("Successfully created " + directors.size() + " directors");
     }
 
     @Operation(summary = "Update a director with full details")

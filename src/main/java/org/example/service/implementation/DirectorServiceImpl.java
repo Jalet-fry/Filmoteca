@@ -3,6 +3,7 @@ package org.example.service.implementation;
 
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,21 @@ public class DirectorServiceImpl implements DirectorService {
             inMemoryCache.put(director.getId(), director);
         } catch (Exception ex) {
             throw new DirectorAlreadyExists(director.toString());
+        }
+    }
+
+    @SneakyThrows
+    @Transactional
+    @Override
+    public void createAll(List<Director> directors) {
+        // Зануляем ID для всех режиссёров
+        directors.forEach(director -> director.setId(0));
+
+        try {
+            List<Director> savedDirectors = directorRepository.saveAll(directors);
+            savedDirectors.forEach(director -> inMemoryCache.put(director.getId(), director));
+        } catch (Exception ex) {
+            throw new DirectorAlreadyExists("Bulk operation failed: " + ex.getMessage());
         }
     }
 

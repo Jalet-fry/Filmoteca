@@ -72,7 +72,7 @@ public class LabControllerAdvice extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleFilmAlreadyExists(Exception ex, WebRequest request) {
         String apiError;
         if (ex.getMessage() == null) {
-            apiError = String.format("This film is already exists");
+            apiError = "This film is already exists";
         } else {
             apiError = String.format("Film '%s' already exists", ex.getMessage());
         }

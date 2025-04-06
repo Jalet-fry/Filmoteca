@@ -1,10 +1,13 @@
 package org.example.service;
 
 import java.util.List;
+import lombok.SneakyThrows;
 import org.example.model.db.Director;
 
 public interface DirectorService {
     void create(Director director);
+
+    void createAll(List<Director> directors);
 
     Director get(Long id);
 

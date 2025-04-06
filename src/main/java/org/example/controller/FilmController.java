@@ -3,6 +3,7 @@ package org.example.controller;
 import static org.example.model.Convert.toDto;
 import static org.example.model.Convert.toDtoList;
 import static org.example.model.Convert.toEntity;
+import static org.example.model.Convert.toEntityListFilms;
 import static org.example.utils.Utils.MAXTEXTSIZE;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,6 +59,20 @@ public class FilmController {
         film.setId(0);
         filmService.create(film);
         return ResponseEntity.status(201).body("Film created successfully");
+    }
+
+    @Operation(summary = "Create multiple films in bulk")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Films created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data"),
+        @ApiResponse(responseCode = "409", description = "One or more films already exist"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PostMapping("/bulk")
+    public ResponseEntity<String> createFilmsBulk(@Valid @RequestBody List<FilmDto> filmDtos) {
+        List<Film> films = toEntityListFilms(filmDtos);
+        filmService.createAll(films);
+        return ResponseEntity.status(201).body("Successfully created " + films.size() + " films");
     }
 
     @Operation(summary = "Update a film with full details")

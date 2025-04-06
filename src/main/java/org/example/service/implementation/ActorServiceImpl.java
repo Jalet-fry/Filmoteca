@@ -3,6 +3,7 @@ package org.example.service.implementation;
 
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import org.example.repository.ActorRepository;
 import org.example.service.ActorService;
 import org.example.service.FilmService;
 import org.example.service.InMemoryCache;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 
@@ -35,6 +37,22 @@ public class ActorServiceImpl implements ActorService {
             inMemoryCache.put(actor.getId(), actor);
         } catch (Exception ex) {
             throw new ActorAlreadyExists(actor.toString());
+        }
+    }
+
+    @SneakyThrows
+    @Transactional
+    @Override
+    public void createAll(List<Actor> actors) {
+        actors.forEach(actor -> actor.setId(0));
+
+        try {
+            List<Actor> savedActors = actorRepository.saveAll(actors);
+            savedActors.forEach(actor -> inMemoryCache.put(actor.getId(), actor));
+        } catch (DataIntegrityViolationException ex) {
+            throw new ActorAlreadyExists("One or more actors already exist: " + ex.getMessage());
+        } catch (Exception ex) {
+            throw new ActorAlreadyExists("Bulk operation failed: " + ex.getMessage());
         }
     }
 

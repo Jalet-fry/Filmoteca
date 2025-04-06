@@ -2,6 +2,7 @@ package org.example.controller;
 
 import static org.example.model.Convert.toDto;
 import static org.example.model.Convert.toEntity;
+import static org.example.model.Convert.toEntityListActors;
 import static org.example.utils.Utils.MAXTEXTSIZE;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,6 +58,28 @@ public class ActorController {
         actor.setFilms(null);
         actorService.create(actor);
         return ResponseEntity.status(201).body("Actor created successfully");
+    }
+
+    @Operation(summary = "Create multiple actors in bulk")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Actors created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data"),
+        @ApiResponse(responseCode = "409", description = "One or more actors already exist"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PostMapping("/bulk")
+    public ResponseEntity<String> createActorsBulk(@Valid @RequestBody List<ActorDto> actorDtos) {
+//        List<Actor> actors = actorDtos.stream()
+//                .map(dto -> {
+//                    Actor actor = toEntity(dto);
+//                    actor.setId(0);
+//                    actor.setFilms(null);
+//                    return actor;
+//                })
+//                .toList();
+        List<Actor> actors = toEntityListActors(actorDtos);
+        actorService.createAll(actors);
+        return ResponseEntity.status(201).body("Successfully created " + actors.size() + " actors");
     }
 
     @Operation(summary = "Update an actor with full details")

@@ -2,14 +2,16 @@ package org.example.repository;
 
 import java.util.List;
 import org.example.model.db.Film;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FilmRepository extends CrudRepository<Film, Long> {
+public interface FilmRepository extends JpaRepository<Film, Long> {
     List<Film> findByTitle(String title);
+
+//    List<Film> saveAll(List<Film> films);
 
     Film getByTitleAndYearAndDirectorId(String title, int year, Long directorId);
 

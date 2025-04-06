@@ -44,7 +44,7 @@ public class LogController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"filtered_logs.txt\"")
+                        "attachment; filename=\"filtered_logs.log\"")
                 .contentLength(filteredLogs.getBytes().length)
                 .body(new ByteArrayResource(filteredLogs.getBytes()));
     }

@@ -104,6 +104,22 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
+    @SneakyThrows
+    @Transactional
+    @Override
+    public void createAll(List<Film> films) {
+        films.forEach(film -> {
+            film.setId(0);
+        });
+
+        try {
+            List<Film> savedFilms = filmRepository.saveAll(films);
+            savedFilms.forEach(film -> inMemoryCache.put(film.getId(), film));
+        } catch (Exception ex) {
+            throw new FilmAlreadyExists("Bulk operation failed: " + ex.getMessage());
+        }
+    }
+
     private void processFilmRelations(Film film) {
         if (film.getActors() != null) {
             film.setActors(film.getActors().stream()

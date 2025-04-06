@@ -172,4 +172,31 @@ public class Convert {
                 .map(Convert::toDto)
                 .toList();
     }
+
+    public static List<Film> toEntityListFilms(List<FilmDto> filmDtos) {
+        if (filmDtos == null) {
+            return new ArrayList<>();
+        }
+        return filmDtos.stream()
+                .map(Convert::toEntity)
+                .collect(Collectors.toList());
+    }
+
+    public static List<Director> toEntityListDirectors(List<DirectorDto> directorDtos) {
+        if (directorDtos == null) {
+            return new ArrayList<>();
+        }
+        return directorDtos.stream()
+                .map(Convert::toEntity)
+                .collect(Collectors.toList());
+    }
+
+    public static List<Actor> toEntityListActors(List<ActorDto> actorDtos) {
+        if (actorDtos == null) {
+            return new ArrayList<>();
+        }
+        return actorDtos.stream()
+                .map(Convert::toEntity)
+                .collect(Collectors.toList());
+    }
 }
