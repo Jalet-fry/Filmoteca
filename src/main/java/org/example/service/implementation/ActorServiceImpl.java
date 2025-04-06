@@ -2,6 +2,7 @@
 package org.example.service.implementation;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -78,6 +79,9 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public void delete(long id) {
+        if (!actorRepository.existsById(id)) {
+            throw new EntityNotFoundException("Actor with id " + id + " not found");
+        }
         actorRepository.deleteById(id);
         filmService.removeActorFromFilmsCache(id);
         inMemoryCache.del(id);

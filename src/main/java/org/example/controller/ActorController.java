@@ -4,6 +4,11 @@ import static org.example.model.Convert.toDto;
 import static org.example.model.Convert.toEntity;
 import static org.example.utils.Utils.MAXTEXTSIZE;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
@@ -31,9 +36,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/actors")
+@Tag(name = "Actor Controller", description = "API for managing film actors")
 public class ActorController {
     private final ActorService actorService;
 
+    @Operation(summary = "Create a new actor") // Добавить
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Actor created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Actor already exists", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody ActorDto actorDto) {
         Actor actor = toEntity(actorDto);
@@ -43,6 +56,13 @@ public class ActorController {
         return ResponseEntity.status(201).body("Actor created successfully");
     }
 
+    @Operation(summary = "Update an actor with full details")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Actor updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Actor not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @PutMapping
     public ResponseEntity<String> put(@Valid @RequestBody ActorDto actorDto) {
         Actor actor = toEntity(actorDto);
@@ -51,6 +71,13 @@ public class ActorController {
         return ResponseEntity.status(200).body("Actor changed successfully");
     }
 
+    @Operation(summary = "Partially update an actor")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Actor partially updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Actor not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @PatchMapping
     public ResponseEntity<String> patch(@Valid @RequestBody ActorDto actorDto) {
         Actor actor = toEntity(actorDto);
@@ -59,12 +86,26 @@ public class ActorController {
         return ResponseEntity.status(200).body("Actor changed successfully");
     }
 
+    @Operation(summary = "Delete an actor by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Actor deleted successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Actor not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@Valid @Min(1) @PathVariable long id) {
         actorService.delete(id);
         return ResponseEntity.status(200).body("Actor deleted successfully");
     }
 
+    @Operation(summary = "Get an actor by name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Actor found"),
+            @ApiResponse(responseCode = "400", description = "Invalid name supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Actor not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @GetMapping
     public ResponseEntity<ActorDto> getByName(
             @Valid @Size(max = MAXTEXTSIZE)
@@ -74,6 +115,13 @@ public class ActorController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Get an actor by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Actor found"),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Actor not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @GetMapping("/{id}")
     public ResponseEntity<ActorDto> get(@Valid @Min(1) @PathVariable Long id) {
         Optional<Actor> actor = Optional.ofNullable(actorService.get(id));
@@ -81,6 +129,11 @@ public class ActorController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Get all actors")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of all actors"),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @GetMapping("/all")
     public ResponseEntity<List<ActorDto>> getAllActors() {
         List<ActorDto> actorDtos = Convert.toDtoListActors(actorService.getAll());

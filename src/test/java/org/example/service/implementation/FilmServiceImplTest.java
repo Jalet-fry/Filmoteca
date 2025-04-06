@@ -16,7 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class FilmServiceImplTest {
+class FilmServiceImplTest {
     @Mock
     private ActorRepository actorRepository;
     @Mock

@@ -2,6 +2,7 @@
 package org.example.service.implementation;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Min;
 import java.util.List;
@@ -264,6 +265,9 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void delete(@Min(1) long id) {
+        if (!filmRepository.existsById(id)) {
+            throw new EntityNotFoundException("Film with id " + id + " not found");
+        }
         inMemoryCache.del(id);
         filmRepository.deleteById(id);
     }

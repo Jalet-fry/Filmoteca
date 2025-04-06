@@ -2,6 +2,7 @@
 package org.example.service.implementation;
 
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -78,6 +79,9 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public void delete(long id) {
+        if (!directorRepository.existsById(id)) {
+            throw new EntityNotFoundException("Director with id " + id + " not found");
+        }
         directorRepository.deleteById(id);
         filmService.removeDirectorFromFilmsCache(id);
         inMemoryCache.del(id);
