@@ -46,12 +46,12 @@ public class FilmServiceImpl implements FilmService {
     public Film get(Long id) {
         Optional<Film> cachedFilm = inMemoryCache.get(id);
         if (cachedFilm.isPresent()) {
-            log.info("Film {0} fetched from cache.", id);
+            log.info("Film {} fetched from cache.", id);
             return cachedFilm.get();
         } else {
             Film film = filmRepository.findById(id).orElseThrow();
             inMemoryCache.put(id, film);
-            log.info("Film {0} fetched from database and cached.", id);
+            log.info("Film {} fetched from database and cached.", id);
             return film;
         }
     }

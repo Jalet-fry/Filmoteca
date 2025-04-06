@@ -18,4 +18,8 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"
   logback:
     rollingpolicy:
+      file-name-pattern: app.%d{yyyy-MM-dd}.log  # Шаблон для старых файлов
+      max-history: 10  # Хранить 10 дней
+      clean-history-on-start: true  # Удалять старые при запуске
+      total-size-cap: 1GB  # Максимальный общий размер
       enabled: false # Полностью отключаем ротацию
