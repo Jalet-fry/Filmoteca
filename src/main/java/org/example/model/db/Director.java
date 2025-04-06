@@ -63,6 +63,21 @@ public class Director {
     }
 
     public String toString() {
-        return "{0} {1} {2}".formatted(firstName, secondName, lastName);
+        return firstName + " " + secondName + " " + lastName;
+    }
+    public String getFullName() {
+        List<String> parts = new ArrayList<>();
+
+        if (!firstName.isEmpty()) {
+            parts.add(firstName.trim());
+        }
+        if (!secondName.isEmpty()) {
+            parts.add(secondName.trim());
+        }
+        if (!lastName.isEmpty()) {
+            parts.add(lastName.trim());
+        }
+
+        return String.join(" ", parts);
     }
 }

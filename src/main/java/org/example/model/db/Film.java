@@ -70,7 +70,23 @@ public class Film {
     }
 
     public String toString() {
-        return "{0} {1}".formatted(title, year);
+        StringBuilder sb = new StringBuilder("Film[");
+
+        if (title != null) {
+            sb.append("title='").append(title).append("'");
+        }
+
+        if (year != null) {
+            if (sb.length() > 6) sb.append(", ");
+            sb.append("year=").append(year);
+        }
+
+        if (director != null && director.getFullName() != null) {
+            if (sb.length() > 6) sb.append(", ");
+            sb.append("director='").append(director.getFullName()).append("'");
+        }
+
+        return sb.append("]").toString();
     }
 
 }

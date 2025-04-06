@@ -60,6 +60,9 @@ public class Actor {
     }
 
     public String toString() {
-        return "{0} {1} {2}".formatted(firstName, secondName, lastName);
+        return java.text.MessageFormat.format(
+                "{0} {1} {2}",
+                firstName, secondName, lastName
+        );
     }
 }
