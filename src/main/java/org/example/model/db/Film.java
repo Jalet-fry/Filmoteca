@@ -77,12 +77,16 @@ public class Film {
         }
 
         if (year != null) {
-            if (sb.length() > 6) sb.append(", ");
+            if (sb.length() > 6) {
+                sb.append(", ");
+            }
             sb.append("year=").append(year);
         }
 
         if (director != null && director.getFullName() != null) {
-            if (sb.length() > 6) sb.append(", ");
+            if (sb.length() > 6) {
+                sb.append(", ");
+            }
             sb.append("director='").append(director.getFullName()).append("'");
         }
 

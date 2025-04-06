@@ -65,6 +65,7 @@ public class Director {
     public String toString() {
         return firstName + " " + secondName + " " + lastName;
     }
+
     public String getFullName() {
         List<String> parts = new ArrayList<>();
 

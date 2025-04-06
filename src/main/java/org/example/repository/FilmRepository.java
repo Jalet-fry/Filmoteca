@@ -31,10 +31,10 @@ public interface FilmRepository extends CrudRepository<Film, Long> {
         """, nativeQuery = true)
     List<Film> findByActorAndDirector(String actorName, String directorName);
 
-    @Query("SELECT CASE WHEN COUNT(f) > 0 THEN TRUE ELSE FALSE END " +
-            "FROM Film f WHERE f.title = :title AND f.year = :year " +
-            "AND (:directorId IS NULL AND f.director IS NULL OR " +
-            "f.director.id = :directorId)")
+    @Query("SELECT CASE WHEN COUNT(f) > 0 THEN TRUE ELSE FALSE END "
+            + "FROM Film f WHERE f.title = :title AND f.year = :year "
+            + "AND (:directorId IS NULL AND f.director IS NULL OR "
+            + "f.director.id = :directorId)")
     boolean existsByTitleAndYearAndDirector(
             @Param("title") String title,
             @Param("year") Integer year,

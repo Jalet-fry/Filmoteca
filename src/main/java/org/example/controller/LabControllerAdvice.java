@@ -40,10 +40,13 @@ public class LabControllerAdvice extends ResponseEntityExceptionHandler
         String errors = ex.getConstraintViolations().stream()
                 .map(violation -> {
                     String path = violation.getPropertyPath().toString();
-                    return path.substring(path.lastIndexOf('.') + 1) + ": " + violation.getMessage();
+                    return path.substring(
+                            path.lastIndexOf('.') + 1)
+                            + ": " + violation.getMessage();
                 })
                 .collect(Collectors.joining("; "));
-        return new ResponseEntity<>("Validation error (parameters): " + errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Validation error (parameters): "
+                + errors, HttpStatus.BAD_REQUEST);
     }
 
     // 3. Сохраняем ваши существующие обработчики
@@ -68,7 +71,7 @@ public class LabControllerAdvice extends ResponseEntityExceptionHandler
     @ExceptionHandler(FilmAlreadyExists.class)
     protected ResponseEntity<Object> handleFilmAlreadyExists(Exception ex, WebRequest request) {
         String apiError;
-        if(ex.getMessage() == null) {
+        if (ex.getMessage() == null) {
             apiError = String.format("This film is already exists");
         } else {
             apiError = String.format("Film '%s' already exists", ex.getMessage());

@@ -84,63 +84,6 @@ public class FilmServiceImpl implements FilmService {
         return result;
     }
 
-//    @SneakyThrows
-//    @Override
-//    @Transactional
-//    public void create(Film film) {
-//        try {
-//            film.setActors(film.getActors().stream()
-//                    .map(actor -> actorRepository
-//                            .getByFirstNameAndSecondNameAndLastName(
-//                                    actor.getFirstName(),
-//                                    actor.getSecondName(),
-//                                    actor.getLastName())
-//                            .orElse(actor)).toList());
-//            Director director = film.getDirector();
-//            if (director != null) {
-//                film.setDirector(directorRepository
-//                        .getByFirstNameAndSecondNameAndLastName(
-//                                director.getFirstName(),
-//                                director.getSecondName(),
-//                                director.getLastName())
-//                        .orElse(film.getDirector()));
-//            } else {
-//                var existedFilm = filmRepository.getByTitleAndYearAndDirectorId(
-//                        film.getTitle(), film.getYear(), null);
-//                if (existedFilm != null) {
-//                    throw new FilmAlreadyExists(existedFilm.toString());
-//                }
-//            }
-//            filmRepository.save(film);
-//            inMemoryCache.put(film.getId(), film);
-//        } catch (Exception ex) {
-//            throw new FilmAlreadyExists(film.toString());
-//        }
-//    }
-/*
-@SneakyThrows
-@Override
-@Transactional
-public void create(Film film) {
-    // 1. Обрабатываем связи перед проверкой дубликатов
-    processFilmRelations(film);
-
-    // 2. Проверка дубликатов с учетом обработанного режиссера
-    Long directorId = film.getDirector() != null ? film.getDirector().getId() : null;
-    if (isFilmDuplicate(film.getTitle(), film.getYear(), directorId)) {
-        throw new FilmAlreadyExists(film.toString());
-    }
-
-    try {
-        // 3. Сохранение
-        Film savedFilm = filmRepository.save(film);
-        inMemoryCache.put(savedFilm.getId(), savedFilm);
-    } catch (DataIntegrityViolationException ex) {
-        throw new FilmAlreadyExists(film.toString(), ex);
-    }
-}
-*/
-
     @SneakyThrows
     @Override
     @Transactional
