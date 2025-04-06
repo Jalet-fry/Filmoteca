@@ -179,7 +179,7 @@ public class Convert {
         }
         return filmDtos.stream()
                 .map(Convert::toEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static List<Director> toEntityListDirectors(List<DirectorDto> directorDtos) {
@@ -188,7 +188,7 @@ public class Convert {
         }
         return directorDtos.stream()
                 .map(Convert::toEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static List<Actor> toEntityListActors(List<ActorDto> actorDtos) {
@@ -197,6 +197,6 @@ public class Convert {
         }
         return actorDtos.stream()
                 .map(Convert::toEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

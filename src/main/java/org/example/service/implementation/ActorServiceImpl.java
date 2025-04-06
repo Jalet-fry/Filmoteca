@@ -37,10 +37,7 @@ public class ActorServiceImpl implements ActorService {
             actorRepository.save(actor);
             inMemoryCache.put(actor.getId(), actor);
         } catch (Exception ex) {
-            String errorMessage = "Actor " + actor.toString() + " already exists";
-            log.error(errorMessage); // Логирование сообщения
-            throw new ActorAlreadyExists(errorMessage);
-            //throw new ActorAlreadyExists(actor.toString());
+            throw new ActorAlreadyExists(actor.toString());
         }
     }
 
