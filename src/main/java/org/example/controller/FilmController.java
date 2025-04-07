@@ -52,7 +52,6 @@ public class FilmController {
         @ApiResponse(responseCode = "500", description = "Internal server error",
 			content = @Content)
     })
-    @SneakyThrows
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody FilmDto filmDto) {
         Film film = toEntity(filmDto);

@@ -13,7 +13,7 @@ public interface FilmService {
 
     List<Film> findByActorAndDirector(String actorName, String directorName);
 
-    void create(Film film) throws FilmAlreadyExists;
+    void create(Film film);
 
     List<Film> getByTitle(String title);
 

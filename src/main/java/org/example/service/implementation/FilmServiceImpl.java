@@ -91,17 +91,10 @@ public class FilmServiceImpl implements FilmService {
     //@Transactional
     public void create(Film film) {
         try {
-            processFilmRelations(film);
-
-            Long directorId = film.getDirector() != null ? film.getDirector().getId() : null;
-            if (isFilmDuplicate(film.getTitle(), film.getYear(), directorId)) {
-                throw new FilmAlreadyExists("Film '" + film.toString() + "' already exists");
-            }
-
             Film savedFilm = filmRepository.save(film);
             inMemoryCache.put(savedFilm.getId(), savedFilm);
         } catch (DataIntegrityViolationException ex) {
-            throw new FilmAlreadyExists("Film '" + film.toString() + "' already exists", ex);
+            throw new FilmAlreadyExists(film.toString());
         }
     }
 

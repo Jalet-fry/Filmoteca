@@ -49,39 +49,37 @@ public class LabControllerAdvice extends ResponseEntityExceptionHandler
                 + errors, HttpStatus.BAD_REQUEST);
     }
 
-    // 3. Сохраняем ваши существующие обработчики
     @ExceptionHandler({EntityNotFoundException.class, NoSuchElementException.class})
-    protected ResponseEntity<Object> handleEntityNotFoundEx(Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleEntityNotFoundEx(Exception ex) {
         String apiError = "Entity Not Found Exception\n" + ex.getMessage();
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ActorAlreadyExists.class)
-    protected ResponseEntity<Object> handleActorAlreadyExists(Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleActorAlreadyExists(Exception ex) {
         String apiError = String.format("Actor '%s' already exists", ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(DirectorAlreadyExists.class)
-    protected ResponseEntity<Object> handleDirectorAlreadyExists(Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleDirectorAlreadyExists(Exception ex) {
         String apiError = String.format("Director '%s' already exists", ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(FilmAlreadyExists.class)
-    protected ResponseEntity<Object> handleFilmAlreadyExists(Exception ex, WebRequest request) {
-        String apiError;
-        if (ex.getMessage() == null) {
-            apiError = "Film already exists";
-        } else {
-            apiError = String.format("Film '%s' already exists", ex.getMessage());
-        }
+    protected ResponseEntity<Object> handleFilmAlreadyExists(
+            FilmAlreadyExists ex) {
+        String apiError = ex.getCustomMessage() != null
+                ? String.format("Film '%s' already exists", ex.getCustomMessage())
+                : "Film already exists";
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(BulkOperation.class)
-    protected ResponseEntity<Object> handleBulkOperation(Exception ex, WebRequest request) {
-        String apiError = String.format("Bulk %s creation failed", ex.getMessage());
+    protected ResponseEntity<Object> handleBulkOperation(BulkOperation ex) {
+        String apiError = String.format("Bulk %s creation failed",
+                ex.getCustomMessage() != null ? ex.getMessage() : "unknown operation");
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 }
