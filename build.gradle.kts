@@ -73,28 +73,44 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("mysql:mysql-connector-java:8.0.33")
-    implementation("org.springframework:spring-orm:6.2.3")
-    implementation("org.hibernate.orm:hibernate-core:6.6.10.Final")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("mysql:mysql-connector-java:8.0.33")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    }
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
+
+    systemProperty("java.io.tmpdir", "${layout.buildDirectory.get()}/tmp")
+    systemProperty("jdk.attach.allowAttachSelf", "true")
+
+    jvmArgs = listOf(
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+        "--add-opens=java.base/java.util=ALL-UNNAMED",
+        "-Djdk.io.File.enableADS=true"
+    )
+
+    testLogging {
+        events("passed", "skipped", "failed")
+        showStandardStreams = true
+    }
 }
 
 jacoco {
-    toolVersion = "0.8.10"
+    toolVersion = "0.8.11"
+    reportsDirectory.set(layout.buildDirectory.dir("reports/jacoco"))
 }
 
 tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+
     reports {
         xml.required.set(true)
         html.required.set(true)
@@ -103,40 +119,33 @@ tasks.jacocoTestReport {
 
     classDirectories.setFrom(
         files(classDirectories.files.map {
-            fileTree(it).apply {
+            fileTree(it) {
                 exclude(
                     "**/config/**",
                     "**/entity/**",
                     "**/dto/**",
                     "**/exception/**",
-                    "**/*Config*.java",
-                    "**/GlobalExceptionHandler.java",
+                    "**/*Config*",
+                    "**/GlobalExceptionHandler*",
                     "**/mdc/**",
-                    "**/Pagination.java",
+                    "**/Pagination*",
                     "**/aspects/**",
-                    "**/*Aspect.java"
+                    "**/*Aspect*"
                 )
             }
         })
     )
 }
 
-val sonarToken: String? = System.getenv("SONAR_TOKEN")
 sonar {
     properties {
         property("sonar.projectKey", "Jalet-fry_Filmoteca")
         property("sonar.organization", "jalet-fry")
         property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.login", sonarToken ?: "")
-//        property("sonar.login", "d641a182d06032100fab82f2899abbd790e3ff7b\n")
-        property("sonar.java.coveragePlugin", "jacoco")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml")
-        property("sonar.junit.reportPaths", "${layout.buildDirectory.get()}/test-results/test")
+        property("sonar.token", System.getenv("SONAR_TOKEN") ?: "")
         property("sonar.sourceEncoding", "UTF-8")
-        property("sonar.java.binaries", "${layout.buildDirectory.get()}/classes")
-        property("sonar.coverage.exclusions",
-            "**/*," +
-                    "!**/service/**" // Negation pattern: exclude everything except service
-        )
+        property("sonar.inclusions", "**/service/**/*.java")
+        property("sonar.coverage.jacoco.xmlReportPaths",
+            "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
