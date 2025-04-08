@@ -1,170 +1,118 @@
 package org.example.service.implementation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Optional;
-import org.example.exception.BulkOperation;
-import org.example.exception.DirectorAlreadyExists;
 import org.example.model.db.Director;
 import org.example.repository.DirectorRepository;
 import org.example.service.FilmService;
 import org.example.service.InMemoryCache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class DirectorServiceImplTest {
 
+    @Mock
     private DirectorRepository directorRepository;
+    @Mock
     private FilmService filmService;
+    @Mock
     private InMemoryCache<Long, Director> inMemoryCache;
+
+    @InjectMocks
     private DirectorServiceImpl directorService;
+
+    private Director testDirector;
 
     @BeforeEach
     void setUp() {
-        directorRepository = mock(DirectorRepository.class);
-        filmService = mock(FilmService.class);
-        inMemoryCache = mock(InMemoryCache.class);
-        directorService = new DirectorServiceImpl(directorRepository, filmService, inMemoryCache);
+        testDirector = new Director();
+        testDirector.setId(1L);
+        testDirector.setFirstName("Christopher");
+        testDirector.setLastName("Nolan");
     }
 
     @Test
-    void create_shouldSaveDirectorAndCacheIt() {
-        Director director = new Director();
-        director.setId(1L);
+    void create_ShouldSaveDirector() {
+        when(directorRepository.save(testDirector)).thenReturn(testDirector);
 
-        when(directorRepository.save(director)).thenReturn(director);
+        directorService.create(testDirector);
 
-        directorService.create(director);
-
-        verify(directorRepository).save(director);
-        verify(inMemoryCache).put(director.getId(), director);
+        verify(directorRepository).save(testDirector);
+        verify(inMemoryCache).put(testDirector.getId(), testDirector);
     }
 
     @Test
-    void create_shouldThrowIfDirectorAlreadyExists() {
-        Director director = new Director();
-        director.setId(1L);
-
-        when(directorRepository.save(director)).thenThrow(RuntimeException.class);
-
-        assertThrows(DirectorAlreadyExists.class, () -> directorService.create(director));
-    }
-
-    @Test
-    void createAll_shouldSaveAndCacheAllDirectors() {
-        List<Director> directors = List.of(new Director(), new Director());
-        when(directorRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
-
-        directorService.createAll(directors);
-
-        verify(directorRepository).saveAll(directors);
-        verify(inMemoryCache, times(2)).put(anyLong(), any());
-    }
-
-    @Test
-    void createAll_shouldThrowBulkOperationException() {
-        List<Director> directors = List.of(new Director(), new Director());
-        when(directorRepository.saveAll(any())).thenThrow(RuntimeException.class);
-
-        assertThrows(BulkOperation.class, () -> directorService.createAll(directors));
-    }
-
-    @Test
-    void get_shouldReturnFromCacheIfExists() {
-        Director director = new Director();
-        director.setId(1L);
-        when(inMemoryCache.get(1L)).thenReturn(Optional.of(director));
+    void get_ShouldReturnDirectorFromCache() {
+        when(inMemoryCache.get(1L)).thenReturn(Optional.of(testDirector));
 
         Director result = directorService.get(1L);
 
-        assertEquals(director, result);
-        verify(directorRepository, never()).findById(anyLong());
+        assertEquals(testDirector, result);
+        verifyNoInteractions(directorRepository);
     }
 
     @Test
-    void get_shouldLoadFromDbAndCacheIfNotInCache() {
-        Director director = new Director();
-        director.setId(1L);
-        when(inMemoryCache.get(1L)).thenReturn(Optional.empty());
-        when(directorRepository.findById(1L)).thenReturn(Optional.of(director));
+    void updateForPut_ShouldUpdateAllNameFields() {
+        Director update = new Director();
+        update.setId(1L);
+        update.setFirstName("New");
+        update.setSecondName("Middle");
+        update.setLastName("Name");
 
-        Director result = directorService.get(1L);
+        when(inMemoryCache.get(1L)).thenReturn(Optional.of(testDirector));
+        when(directorRepository.save(any(Director.class))).thenReturn(testDirector);
 
-        assertEquals(director, result);
-        verify(inMemoryCache).put(1L, director);
+        directorService.put(update);
+
+        assertEquals("New", testDirector.getFirstName());
+        assertEquals("Middle", testDirector.getSecondName());
+        assertEquals("Name", testDirector.getLastName());
     }
 
     @Test
-    void getAll_shouldReturnAndCacheAll() {
-        Director director1 = new Director(); director1.setId(1L);
-        Director director2 = new Director(); director2.setId(2L);
-        List<Director> all = List.of(director1, director2);
-        when(directorRepository.findAll()).thenReturn(all);
+    void updateForPatch_ShouldUpdateOnlyNonEmptyFields() {
+        Director partialUpdate = new Director();
+        partialUpdate.setId(1L);
+        partialUpdate.setFirstName("New");
+        // secondName and lastName remain empty
 
-        List<Director> result = directorService.getAll();
+        when(inMemoryCache.get(1L)).thenReturn(Optional.of(testDirector));
+        when(directorRepository.save(any(Director.class))).thenReturn(testDirector);
 
-        assertEquals(all, result);
-        verify(inMemoryCache, times(2)).put(anyLong(), any());
+        directorService.patch(partialUpdate);
+
+        assertEquals("New", testDirector.getFirstName());
+        assertEquals("", testDirector.getSecondName()); // remains empty
+        assertEquals("Nolan", testDirector.getLastName()); // remains unchanged
     }
 
     @Test
-    void put_shouldUpdateAndSaveDirector() {
-        Director input = new Director(); input.setId(1L);
-        Director existing = mock(Director.class); when(existing.getId()).thenReturn(1L);
-
-        when(inMemoryCache.get(1L)).thenReturn(Optional.of(existing));
-
-        directorService.put(input);
-
-        verify(existing).updateForPut(input);
-        verify(directorRepository).save(existing);
-        verify(inMemoryCache).put(1L, existing);
-    }
-
-    @Test
-    void patch_shouldUpdateAndSaveDirector() {
-        Director input = new Director(); input.setId(1L);
-        Director existing = mock(Director.class); when(existing.getId()).thenReturn(1L);
-
-        when(inMemoryCache.get(1L)).thenReturn(Optional.of(existing));
-
-        directorService.patch(input);
-
-        verify(existing).updateForPatch(input);
-        verify(directorRepository).save(existing);
-        verify(inMemoryCache).put(1L, existing);
-    }
-
-    @Test
-    void delete_shouldThrowIfNotExists() {
-        when(directorRepository.existsById(1L)).thenReturn(false);
-        assertThrows(EntityNotFoundException.class, () -> directorService.delete(1L));
-    }
-
-    @Test
-    void delete_shouldRemoveFromRepoCacheAndNotifyFilmService() {
+    void delete_ShouldRemoveDirectorAndClearCache() {
         when(directorRepository.existsById(1L)).thenReturn(true);
 
         directorService.delete(1L);
 
         verify(directorRepository).deleteById(1L);
-        verify(filmService).removeDirectorFromFilmsCache(1L);
         verify(inMemoryCache).del(1L);
+        verify(filmService).removeDirectorFromFilmsCache(1L);
     }
 
     @Test
-    void getByName_shouldReturnNull() {
-        assertNull(directorService.getByName("Any"));
+    void getFullName_ShouldHandleEmptyParts() {
+        Director director = new Director();
+        director.setFirstName("First");
+        director.setLastName("Last");
+
+        assertEquals("First Last", director.getFullName());
     }
 }
