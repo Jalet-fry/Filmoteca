@@ -121,12 +121,13 @@ tasks.jacocoTestReport {
     )
 }
 
+val sonarToken: String? = System.getenv("SONAR_TOKEN")
 sonar {
     properties {
         property("sonar.projectKey", "Jalet-fry_Filmoteca")
         property("sonar.organization", "jalet-fry")
         property("sonar.host.url", "https://sonarcloud.io")
-        //property("sonar.login", System.getenv("SONAR_TOKEN") ?: "")
+        property("sonar.login", sonarToken ?: "")
 //        property("sonar.login", "d641a182d06032100fab82f2899abbd790e3ff7b\n")
         property("sonar.java.coveragePlugin", "jacoco")
         property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml")

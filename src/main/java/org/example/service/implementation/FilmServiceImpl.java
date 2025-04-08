@@ -134,10 +134,6 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
-    private boolean isFilmDuplicate(String title, Integer year, Long directorId) {
-        return filmRepository.existsByTitleAndYearAndDirector(title, year, directorId);
-    }
-
     private void saveToCacheAndDb(Film film) {
         Film savedFilm = filmRepository.save(film);
         savedFilm.getActors().size();
