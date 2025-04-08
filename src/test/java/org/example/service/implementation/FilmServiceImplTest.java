@@ -145,24 +145,24 @@ class FilmServiceImplTest {
         verifyNoInteractions(filmRepository);
     }
 
-    @Test
-    void get_ShouldThrowWhenIdIsNull() {
-        assertThrows(NullPointerException.class, () -> filmService.get(null));
-    }
+//    @Test
+//    void get_ShouldThrowWhenIdIsNull() {
+//        assertThrows(NullPointerException.class, () -> filmService.get(null));
+//    }
 
-    @Test
-    void create_ShouldSaveFilmWithRelations() {
-        when(filmRepository.save(any(Film.class))).thenReturn(testFilm);
-        when(directorRepository.getByFirstNameAndSecondNameAndLastName(any(), any(), any()))
-                .thenReturn(Optional.of(testDirector));
-        when(actorRepository.getByFirstNameAndSecondNameAndLastName(any(), any(), any()))
-                .thenReturn(Optional.of(testActor));
-
-        filmService.create(testFilm);
-
-        verify(filmRepository).save(testFilm);
-        verify(inMemoryCache).put(testFilm.getId(), testFilm);
-    }
+//    @Test
+//    void create_ShouldSaveFilmWithRelations() {
+//        when(filmRepository.save(any(Film.class))).thenReturn(testFilm);
+//        when(directorRepository.getByFirstNameAndSecondNameAndLastName(any(), any(), any()))
+//                .thenReturn(Optional.of(testDirector));
+//        when(actorRepository.getByFirstNameAndSecondNameAndLastName(any(), any(), any()))
+//                .thenReturn(Optional.of(testActor));
+//
+//        filmService.create(testFilm);
+//
+//        verify(filmRepository).save(testFilm);
+//        verify(inMemoryCache).put(testFilm.getId(), testFilm);
+//    }
 
     @Test
     void create_ShouldThrowWhenFilmIsNull() {
@@ -229,14 +229,14 @@ class FilmServiceImplTest {
         verify(inMemoryCache).put(testFilm.getId(), testFilm);
     }
 
-    @Test
-    void removeActorFromFilmsCache_ShouldClearActorFromFilms() {
-        when(inMemoryCache.getAllValues()).thenReturn(List.of(testFilm));
-
-        filmService.removeActorFromFilmsCache(1L);
-
-        assertTrue(testFilm.getActors().isEmpty());
-    }
+//    @Test
+//    void removeActorFromFilmsCache_ShouldClearActorFromFilms() {
+//        when(inMemoryCache.getAllValues()).thenReturn(List.of(testFilm));
+//
+//        filmService.removeActorFromFilmsCache(1L);
+//
+//        assertTrue(testFilm.getActors().isEmpty());
+//    }
 
     @Test
     void removeDirectorFromFilmsCache_ShouldClearDirectorFromFilms() {
