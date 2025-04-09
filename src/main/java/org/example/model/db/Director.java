@@ -45,13 +45,13 @@ public class Director {
     private List<Film> films = new ArrayList<>();
 
     public void updateForPatch(Director newDirector) {
-        if (!newDirector.getFirstName().isEmpty()) {
+        if (newDirector.getFirstName() != null && !newDirector.getFirstName().isEmpty()) {
             this.setFirstName(newDirector.getFirstName());
         }
-        if (!newDirector.getSecondName().isEmpty()) {
+        if (newDirector.getSecondName() != null && !newDirector.getSecondName().isEmpty()) {
             this.setSecondName(newDirector.getSecondName());
         }
-        if (!newDirector.getLastName().isEmpty()) {
+        if (newDirector.getLastName() != null && !newDirector.getLastName().isEmpty()) {
             this.setLastName(newDirector.getLastName());
         }
     }

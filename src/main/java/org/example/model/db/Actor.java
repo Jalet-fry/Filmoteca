@@ -42,13 +42,13 @@ public class Actor {
 
 
     public void updateForPatch(Actor newActor) {
-        if (!newActor.getFirstName().isEmpty()) {
+        if (newActor.getFirstName() != null && !newActor.getFirstName().isEmpty()) {
             this.setFirstName(newActor.getFirstName());
         }
-        if (!newActor.getSecondName().isEmpty()) {
+        if (newActor.getSecondName() != null && !newActor.getSecondName().isEmpty()) {
             this.setSecondName(newActor.getSecondName());
         }
-        if (!newActor.getLastName().isEmpty()) {
+        if (newActor.getLastName() != null && !newActor.getLastName().isEmpty()) {
             this.setLastName(newActor.getLastName());
         }
     }

@@ -123,13 +123,17 @@ class DirectorServiceImplTest {
         Director update = new Director();
         update.setId(1L);
         update.setFirstName("Updated");
+        update.setSecondName("New");
+        update.setLastName("Name");
 
         when(inMemoryCache.get(1L)).thenReturn(Optional.of(testDirector));
-        when(directorRepository.save(testDirector)).thenReturn(testDirector);
 
         directorService.put(update);
 
         assertEquals("Updated", testDirector.getFirstName());
+        assertEquals("New", testDirector.getSecondName());
+        assertEquals("Name", testDirector.getLastName());
+        verify(directorRepository).save(testDirector);
         verify(inMemoryCache).put(1L, testDirector);
     }
 
@@ -140,12 +144,12 @@ class DirectorServiceImplTest {
         partialUpdate.setFirstName("Updated");
 
         when(inMemoryCache.get(1L)).thenReturn(Optional.of(testDirector));
-        when(directorRepository.save(testDirector)).thenReturn(testDirector);
 
         directorService.patch(partialUpdate);
 
         assertEquals("Updated", testDirector.getFirstName());
         assertEquals("Nolan", testDirector.getLastName());
+        verify(directorRepository).save(testDirector);
         verify(inMemoryCache).put(1L, testDirector);
     }
 
@@ -165,5 +169,24 @@ class DirectorServiceImplTest {
         when(directorRepository.existsById(1L)).thenReturn(false);
 
         assertThrows(EntityNotFoundException.class, () -> directorService.delete(1L));
+    }
+
+    @Test
+    void getByName_shouldReturnDirector() {
+        when(directorRepository.getByFirstNameAndSecondNameAndLastName("Christopher", "", "Nolan"))
+                .thenReturn(Optional.of(testDirector));
+
+        Director result = directorService.getByName("Christopher", "", "Nolan");
+
+        assertEquals(testDirector, result);
+    }
+
+    @Test
+    void getByName_shouldThrowWhenNotFound() {
+        when(directorRepository.getByFirstNameAndSecondNameAndLastName("Christopher", "", "Nolan"))
+                .thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class,
+                () -> directorService.getByName("Christopher", "", "Nolan"));
     }
 }
