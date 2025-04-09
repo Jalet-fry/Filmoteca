@@ -1,5 +1,12 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,14 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterStyle;
-
 @RestController
 @RequestMapping("/logs")
 @Tag(name = "Log Controller", description = "API for accessing and filtering application logs")
@@ -45,18 +44,18 @@ public class LogController {
             description = "Returns application logs filtered by date and/or time. "
                     + "Logs are returned as a downloadable text file.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Logs retrieved successfully",
-                    content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "400",
-                    description = "Invalid date/time format",
-                    content = @Content),
-            @ApiResponse(responseCode = "404",
-                    description = "Log file not found or empty",
-                    content = @Content),
-            @ApiResponse(responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content)
+        @ApiResponse(responseCode = "200",
+                description = "Logs retrieved successfully",
+                content = @Content(mediaType = "text/plain")),
+        @ApiResponse(responseCode = "400",
+                description = "Invalid date/time format",
+                content = @Content),
+        @ApiResponse(responseCode = "404",
+                description = "Log file not found or empty",
+                content = @Content),
+        @ApiResponse(responseCode = "500",
+                description = "Internal server error",
+                content = @Content)
     })
     @GetMapping(produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<Resource> getLogs(

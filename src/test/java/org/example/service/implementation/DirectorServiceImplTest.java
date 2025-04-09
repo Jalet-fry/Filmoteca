@@ -166,9 +166,4 @@ class DirectorServiceImplTest {
 
         assertThrows(EntityNotFoundException.class, () -> directorService.delete(1L));
     }
-
-    @Test
-    void getByName_ShouldReturnNull() {
-        assertNull(directorService.getByName("Christopher"));
-    }
 }

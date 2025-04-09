@@ -138,9 +138,11 @@ public class ActorController {
     })
     @GetMapping
     public ResponseEntity<ActorDto> getByName(
-            @Valid @Size(max = MAXTEXTSIZE)
-            @RequestParam String name) {
-        Optional<Actor> actor = Optional.ofNullable(actorService.getByName(name));
+            @Valid @Size(max = MAXTEXTSIZE) @RequestParam String firstName,
+            @Valid @Size(max = MAXTEXTSIZE) @RequestParam String secondName,
+            @Valid @Size(max = MAXTEXTSIZE) @RequestParam String lastName) {
+        Optional<Actor> actor = Optional.ofNullable(
+                actorService.getByName(firstName, secondName, lastName));
         return actor.map(entity -> ResponseEntity.ok(toDto(entity)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

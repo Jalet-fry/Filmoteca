@@ -104,7 +104,11 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public Actor getByName(String name) {
-        return null;
+    public Actor getByName(String firstName, String secondName, String lastName) {
+        return actorRepository
+                .getByFirstNameAndSecondNameAndLastName(firstName, secondName, lastName)
+                .orElseThrow(() -> new EntityNotFoundException("Actor not found with name: "
+                        + firstName + " " + secondName + " " + lastName));
     }
+
 }

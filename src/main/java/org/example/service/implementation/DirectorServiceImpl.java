@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.annotations.CacheBean;
 import org.example.exception.BulkOperation;
 import org.example.exception.DirectorAlreadyExists;
+import org.example.model.db.Actor;
 import org.example.model.db.Director;
 import org.example.repository.DirectorRepository;
 import org.example.service.DirectorService;
@@ -104,7 +105,10 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public Director getByName(String name) {
-        return null;
+    public Director getByName(String firstName, String secondName, String lastName) {
+        return directorRepository
+                .getByFirstNameAndSecondNameAndLastName(firstName, secondName, lastName)
+                .orElseThrow(() -> new EntityNotFoundException("Actor not found with name: "
+                        + firstName + " " + secondName + " " + lastName));
     }
 }

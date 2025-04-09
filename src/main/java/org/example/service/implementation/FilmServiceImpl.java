@@ -113,27 +113,6 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
-    private void processFilmRelations(Film film) {
-        if (film.getActors() != null) {
-            film.setActors(film.getActors().stream()
-                    .map(actor -> actorRepository
-                            .getByFirstNameAndSecondNameAndLastName(
-                                    actor.getFirstName(),
-                                    actor.getSecondName(),
-                                    actor.getLastName())
-                            .orElse(actor))
-                    .toList());
-        }
-        if (film.getDirector() != null) {
-            film.setDirector(directorRepository
-                    .getByFirstNameAndSecondNameAndLastName(
-                            film.getDirector().getFirstName(),
-                            film.getDirector().getSecondName(),
-                            film.getDirector().getLastName())
-                    .orElse(film.getDirector()));
-        }
-    }
-
     private void saveToCacheAndDb(Film film) {
         Film savedFilm = filmRepository.save(film);
         savedFilm.getActors().size();

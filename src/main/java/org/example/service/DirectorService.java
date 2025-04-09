@@ -2,6 +2,7 @@ package org.example.service;
 
 import java.util.List;
 import lombok.SneakyThrows;
+import org.example.model.db.Actor;
 import org.example.model.db.Director;
 
 public interface DirectorService {
@@ -19,6 +20,6 @@ public interface DirectorService {
 
     void delete(long id);
 
-    Director getByName(String name);
+    Director getByName(String firstName, String secondName, String lastName);
 }
 

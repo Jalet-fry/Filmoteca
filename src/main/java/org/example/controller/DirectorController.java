@@ -151,9 +151,11 @@ public class DirectorController {
     })
     @GetMapping
     public ResponseEntity<DirectorDto> getByName(
-            @Valid @Size(max = MAXTEXTSIZE)
-            @RequestParam String name) {
-        Optional<Director> director = Optional.ofNullable(directorService.getByName(name));
+            @Valid @Size(max = MAXTEXTSIZE) @RequestParam String firstName,
+            @Valid @Size(max = MAXTEXTSIZE) @RequestParam String secondName,
+            @Valid @Size(max = MAXTEXTSIZE) @RequestParam String lastName) {
+        Optional<Director> director = Optional.ofNullable(
+                directorService.getByName(firstName, secondName, lastName));
         return director.map(entity -> ResponseEntity.ok(toDto(entity)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

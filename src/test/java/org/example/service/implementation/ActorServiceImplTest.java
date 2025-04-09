@@ -162,9 +162,4 @@ class ActorServiceImplTest {
         verify(filmService).removeActorFromFilmsCache(1L);
         verify(inMemoryCache).del(1L);
     }
-
-    @Test
-    void getByName_shouldReturnNull() {
-        assertNull(actorService.getByName("Any"));
-    }
 }

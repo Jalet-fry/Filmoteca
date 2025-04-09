@@ -20,6 +20,6 @@ public interface ActorService {
 
     void delete(long id);
 
-    Actor getByName(String name);
+    Actor getByName(String firstName, String secondName, String lastName);
 }
 
