@@ -110,6 +110,7 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
+    @SuppressWarnings("java:S1481")
     private void saveToCacheAndDb(Film film) {
         Film savedFilm = filmRepository.save(film);
         int size = savedFilm.getActors().size();
@@ -186,6 +187,7 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
+    @SuppressWarnings("java:S6204")
     private void putActors(Film existed, Film film) {
         if (film.getActors() == null) {
             existed.setActors(null);
@@ -216,6 +218,7 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
+    @SuppressWarnings("java:S6204")
     private void patchActors(Film existed, Film film) {
         if (film.getActors() != null) {
             Map<Long, Actor> existingActorsMap = existed.getActors().stream()
