@@ -1,31 +1,12 @@
 package org.example;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class FilmotecaApplicationTest {
-
-    private static final String TEST_PROFILE = "test";
-    private String originalProfile;
-
-    @BeforeEach
-    void saveOriginalProfile() {
-        originalProfile = System.getProperty("spring.profiles.active");
-    }
-
-    @AfterEach
-    void restoreOriginalProfile() {
-        if (originalProfile != null) {
-            System.setProperty("spring.profiles.active", originalProfile);
-        } else {
-            System.clearProperty("spring.profiles.active");
-        }
-    }
 
     @Test
     void contextLoadsSuccessfully(ApplicationContext context) {
@@ -41,5 +22,4 @@ class FilmotecaApplicationTest {
                         "labControllerAdvice bean should be present")
         );
     }
-
 }

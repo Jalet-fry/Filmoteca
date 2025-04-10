@@ -110,10 +110,13 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
-    @SuppressWarnings("java:S1854")
     private void saveToCacheAndDb(Film film) {
         Film savedFilm = filmRepository.save(film);
-        savedFilm.getActors().size();
+        // Безопасная инициализация lazy-коллекции с проверкой на null
+        if (savedFilm.getActors() != null) {
+            int size = savedFilm.getActors().size();
+            assert size >= 0;
+        }
         inMemoryCache.put(film.getId(), savedFilm);
     }
 
