@@ -144,7 +144,7 @@ sonar {
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.token", System.getenv("SONAR_TOKEN") ?: "")
         property("sonar.sourceEncoding", "UTF-8")
-        property("sonar.inclusions", "**/service/implementation**/*.java")
+        property("sonar.inclusions", "**/org/example/**/*.java")
         property("sonar.coverage.jacoco.xmlReportPaths",
             "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml")
     }
