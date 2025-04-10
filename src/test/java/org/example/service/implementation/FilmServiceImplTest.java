@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -343,13 +342,6 @@ class FilmServiceImplTest {
             when(directorRepository.findById(newDirector.getId()))
                     .thenReturn(Optional.of(newDirector));
         }
-//        if (numberOfTest == 2) {
-//            when(directorRepository.getByFirstNameAndSecondNameAndLastName(
-//                    newFirstName,
-//                    newSecondName != null ? newSecondName : "",
-//                    newLastName))
-//                    .thenReturn(Optional.of(existingDirector));
-//        }
         invokePutDirector(testFilm, update);
         if (numberOfTest == 0) {
             assertNull(testFilm.getDirector());
@@ -372,13 +364,6 @@ class FilmServiceImplTest {
             when(directorRepository.findById(newDirector.getId()))
                     .thenReturn(Optional.of(newDirector));
         }
-//        if (numberOfTest == 2) {
-//            when(directorRepository.getByFirstNameAndSecondNameAndLastName(
-//                    newFirstName,
-//                    newSecondName != null ? newSecondName : "",
-//                    newLastName))
-//                    .thenReturn(Optional.of(existingDirector));
-//        }
         invokePatchDirector(testFilm, update);
         if (numberOfTest == 0) {
             assertNull(testFilm.getDirector());
