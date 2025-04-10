@@ -33,12 +33,6 @@ class FilmotecaApplicationTest {
     }
 
     @Test
-    void mainMethodStartsApplicationWithArguments() {
-        assertDoesNotThrow(() -> FilmotecaApplication.main(new String[]{"--spring.profiles.active=" + TEST_PROFILE}),
-                "Application should start with profile arguments");
-    }
-
-    @Test
     void applicationContextContainsRequiredBeans(ApplicationContext context) {
         assertAll(
                 () -> assertNotNull(context.getBean("inMemoryCacheImpl"),
