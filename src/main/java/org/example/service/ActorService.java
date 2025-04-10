@@ -1,8 +1,6 @@
 package org.example.service;
 
-import jakarta.transaction.Transactional;
 import java.util.List;
-import lombok.SneakyThrows;
 import org.example.model.db.Actor;
 
 public interface ActorService {

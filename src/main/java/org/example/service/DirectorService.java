@@ -1,8 +1,6 @@
 package org.example.service;
 
 import java.util.List;
-import lombok.SneakyThrows;
-import org.example.model.db.Actor;
 import org.example.model.db.Director;
 
 public interface DirectorService {
