@@ -74,4 +74,39 @@ class InMemoryCacheImplTest {
         assertEquals(2, values.size());
         assertTrue(values.containsAll(List.of("One", "Two")));
     }
+    @Test
+    void get_ShouldReturnEmptyOptionalForNullKey() {
+        assertTrue(cache.get(null).isEmpty());
+    }
+
+    @Test
+    void put_ShouldReturnNullForNullKeyOrValue() {
+        assertNull(cache.put(null, "Test"));
+        assertNull(cache.put(1L, null));
+        assertTrue(cache.getAllValues().isEmpty());
+    }
+
+    @Test
+    void getAllValues_ShouldReturnEmptyCollectionForEmptyCache() {
+        Collection<String> values = cache.getAllValues();
+        assertTrue(values.isEmpty());
+    }
+
+    @Test
+    void getAllValues_ShouldReturnUnmodifiableCollection() {
+        cache.put(1L, "One");
+        Collection<String> values = cache.getAllValues();
+
+        assertThrows(UnsupportedOperationException.class, () -> {
+            values.add("Two");
+        });
+    }
+
+    @Test
+    void cacheShouldNotExceedMaximumSize() {
+        for (int i = 0; i < 5; i++) {
+            cache.put((long)i, "Value " + i);
+        }
+        assertEquals(4, cache.getAllValues().size());
+    }
 }

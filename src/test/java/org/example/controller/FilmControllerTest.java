@@ -74,8 +74,6 @@ FilmControllerTest {
 
     @Test
     void create_ShouldReturnCreatedResponse() {
-//        when(filmService.create(any(Film.class))).thenReturn(testFilm);
-
         ResponseEntity<String> response = filmController.create(testFilmDto);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());

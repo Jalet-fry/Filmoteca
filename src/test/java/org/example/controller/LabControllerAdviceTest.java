@@ -125,4 +125,6 @@ class LabControllerAdviceTest {
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals("Bulk unknown operation creation failed", response.getBody());
     }
+
+
 }
