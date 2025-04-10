@@ -58,7 +58,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> getAll() {
-        List<Film> result = (List<Film>) filmRepository.findAll();
+        List<Film> result = filmRepository.findAll();
         result.forEach(elem -> inMemoryCache.put(elem.getId(), elem));
         return result;
     }
@@ -101,10 +101,7 @@ public class FilmServiceImpl implements FilmService {
     @SneakyThrows
     @Override
     public void createAll(List<Film> films) {
-        films.forEach(film -> {
-            film.setId(0);
-        });
-
+        films.forEach(film -> film.setId(0));
         try {
             List<Film> savedFilms = filmRepository.saveAll(films);
             savedFilms.forEach(film -> inMemoryCache.put(film.getId(), film));
@@ -115,7 +112,7 @@ public class FilmServiceImpl implements FilmService {
 
     private void saveToCacheAndDb(Film film) {
         Film savedFilm = filmRepository.save(film);
-        savedFilm.getActors().size();
+        int size = savedFilm.getActors().size();
         inMemoryCache.put(film.getId(), savedFilm);
     }
 

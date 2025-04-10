@@ -70,7 +70,8 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public List<Actor> getAll() {
-        List<Actor> result = (List<Actor>) actorRepository.findAll();
+        //List<Actor> result = (List<Actor>) actorRepository.findAll();
+        List<Actor> result = actorRepository.findAll();
         result.forEach(elem -> inMemoryCache.put(elem.getId(), elem));
         return result;
     }
