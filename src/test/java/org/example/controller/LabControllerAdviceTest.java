@@ -25,12 +25,10 @@ import org.springframework.web.context.request.WebRequest;
 class LabControllerAdviceTest {
 
     private LabControllerAdvice labControllerAdvice;
-    private WebRequest mockRequest;
 
     @BeforeEach
     void setUp() {
         labControllerAdvice = new LabControllerAdvice();
-        mockRequest = mock(WebRequest.class);
     }
 
     @Test

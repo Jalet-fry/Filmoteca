@@ -3,16 +3,12 @@ package org.example.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.Optional;
-
-import org.example.exception.FilmAlreadyExists;
 import org.example.model.ActorDto;
 import org.example.model.DirectorDto;
 import org.example.model.FilmDto;
@@ -90,7 +86,6 @@ FilmControllerTest {
     @Test
     void createFilmsBulk_ShouldReturnCreatedResponse() {
         List<FilmDto> filmDtos = List.of(testFilmDto);
-//        when(filmService.createAll(anyList())).thenReturn(List.of(testFilm));
 
         ResponseEntity<String> response = filmController.createFilmsBulk(filmDtos);
 

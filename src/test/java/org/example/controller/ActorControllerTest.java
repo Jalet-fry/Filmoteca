@@ -9,8 +9,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.example.model.ActorDto;
 import org.example.model.db.Actor;
 import org.example.service.ActorService;

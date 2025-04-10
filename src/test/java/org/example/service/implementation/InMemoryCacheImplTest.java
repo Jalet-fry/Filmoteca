@@ -33,7 +33,7 @@ class InMemoryCacheImplTest {
     }
 
     @Test
-    void put_ShouldEvictOldestItemWhenFull() throws InterruptedException {
+    void put_ShouldEvictOldestItemWhenFull() {
         for (long i = 1; i <= 5; i++) {
             cache.put(i, "Item " + i);
         }
