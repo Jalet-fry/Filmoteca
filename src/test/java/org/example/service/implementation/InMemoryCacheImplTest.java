@@ -36,7 +36,6 @@ class InMemoryCacheImplTest {
     void put_ShouldEvictOldestItemWhenFull() throws InterruptedException {
         for (long i = 1; i <= 5; i++) {
             cache.put(i, "Item " + i);
-            Thread.sleep(10); // Ensure different timestamps
         }
         assertFalse(cache.get(1L).isPresent());
         assertTrue(cache.get(5L).isPresent());

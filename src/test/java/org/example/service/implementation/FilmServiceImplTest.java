@@ -451,20 +451,8 @@ class FilmServiceImplTest {
         newActor.setFirstName("New");
         newActor.setSecondName("Sparky");
         newActor.setLastName("Actor");
-
-//        Actor existingActor = new Actor();
-//        existingActor.setId(2L);
-//        existingActor.setFirstName("Old");
-//        existingActor.setSecondName("Jerald");
-//        existingActor.setLastName("Jn");
-
         Film update = new Film();
         update.setActors(List.of(newActor));
-
-//        when(actorRepository.getByFirstNameAndSecondNameAndLastName(
-//                "New", "Sparky", "Actor"))
-//                .thenReturn(Optional.of(existingActor));
-
         invokePatchActors(testFilm, update);
 
         assertEquals(0L, testFilm.getActors().get(0).getId());

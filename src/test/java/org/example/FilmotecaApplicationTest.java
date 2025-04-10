@@ -16,6 +16,7 @@ class FilmotecaApplicationTest {
 
     @Test
     void mainMethodStartsApplication() {
-        FilmotecaApplication.main(new String[]{});
+        FilmotecaApplication.main(new String[] {});
+        // Just verifying the application starts without exceptions
     }
 }
