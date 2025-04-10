@@ -110,7 +110,7 @@ public class FilmServiceImpl implements FilmService {
         }
     }
 
-    @SuppressWarnings("java:S1845")
+    @SuppressWarnings("java:S1854")
     private void saveToCacheAndDb(Film film) {
         Film savedFilm = filmRepository.save(film);
         int size = savedFilm.getActors().size();
