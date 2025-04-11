@@ -17,12 +17,12 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.example.model.Convert;
 import org.example.model.FilmDto;
 import org.example.model.db.Film;
 import org.example.service.FilmService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/films")
 @Tag(name = "Film Controller", description = "API for managing films")
+@Validated
 public class FilmController {
     private final FilmService filmService;
 

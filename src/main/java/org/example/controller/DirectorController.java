@@ -24,6 +24,7 @@ import org.example.model.db.Actor;
 import org.example.model.db.Director;
 import org.example.service.DirectorService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/directors")
 @Tag(name = "Director Controller", description = "API for managing film directors")
+@Validated
 public class DirectorController {
     private final DirectorService directorService;
 
@@ -189,6 +191,3 @@ public class DirectorController {
         return ResponseEntity.ok(directorDtos);
     }
 }
-
-
-

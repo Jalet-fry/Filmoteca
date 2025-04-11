@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 @AllArgsConstructor
 @Setter
@@ -18,6 +19,7 @@ public class FilmDto {
     private long id;
     private DirectorDto director;
     private List<ActorDto> actors;
+    @Length(max = 20)
     private String title;
     private String link;
     @Max(2077)
