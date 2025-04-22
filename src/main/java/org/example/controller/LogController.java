@@ -15,7 +15,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.example.events.LogEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -30,7 +34,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/logs")
 @Tag(name = "Log Controller", description = "API for accessing and filtering application logs")
+@RequiredArgsConstructor
 public class LogController {
+    private final ApplicationEventPublisher eventPublisher;
+    private static Long logId = 0L;
+    private static HashMap<Long, Resource> logFiles = new HashMap<>();
+
+    public void putResourse(Long id, Resource resource) {
+        logFiles.put(id, resource);
+    }
 
     private static final String LOG_FILE = "app.log";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
@@ -68,6 +80,7 @@ public class LogController {
                     example = "14:30:00",
                     style = ParameterStyle.SIMPLE)
             @RequestParam(required = false) String time) throws IOException {
+        eventPublisher.publishEvent(new LogEvent(this, date, time, ++logId));
 
         Path logPath = Paths.get(LOG_FILE);
         String filteredLogs = "";

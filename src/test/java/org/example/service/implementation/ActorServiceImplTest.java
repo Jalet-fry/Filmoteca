@@ -193,5 +193,6 @@ class ActorServiceImplTest {
 
         assertThrows(EntityNotFoundException.class,
                 () -> actorService.getByName("John", "", "Doe"));
+
     }
 }
