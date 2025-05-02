@@ -24,9 +24,8 @@ public class LogEventHandler implements ApplicationListener<LogEvent> {
 
                 Path logPath = Paths.get("app.log");
                 String filteredLogs = filterLogs(logPath, event.getDate(), event.getTime());
-
                 // Store the filtered logs with the event ID
-                LogController.putResourse(event.getId(),
+                LogController.putResource(event.getId(),
                         new ByteArrayResource(filteredLogs.getBytes()));
 
             } catch (IOException | InterruptedException e) {
@@ -48,13 +47,15 @@ public class LogEventHandler implements ApplicationListener<LogEvent> {
 
                         if (dateParam != null) {
                             LocalDate logDate = LogController.parseDateFromLog(line);
-                            LocalDate filterDate = LocalDate.parse(dateParam, LogController.DATE_FORMATTER);
+                            LocalDate filterDate = LocalDate.parse(dateParam,
+                                    LogController.DATE_FORMATTER);
                             matches = logDate.equals(filterDate);
                         }
 
                         if (matches && timeParam != null) {
                             LocalTime logTime = LogController.parseTimeFromLog(line);
-                            LocalTime filterTime = LocalTime.parse(timeParam, LogController.TIME_FORMATTER);
+                            LocalTime filterTime = LocalTime.parse(timeParam,
+                                    LogController.TIME_FORMATTER);
                             matches = logTime.equals(filterTime);
                         }
 

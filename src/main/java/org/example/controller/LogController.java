@@ -13,7 +13,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import org.example.events.LogEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -35,31 +34,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LogController {
     private final ApplicationEventPublisher eventPublisher;
-    private static Long logId = 0L;
-    private static final Map<Long, Resource> logFiles = new ConcurrentHashMap<>();
-    private static final Map<Long, Boolean> processingStatus = new ConcurrentHashMap<>();
+    private static Long lastProcessId = 0L;
+    private static Resource lastLogResource = null;
+    private static boolean isProcessing = false;
 
-    public static synchronized void putResourse(Long id, Resource resource) {
-        logFiles.put(id, resource);
-        processingStatus.put(id, true); // Mark as processed
+    public static synchronized void putResource(Long id, Resource resource) {
+        lastProcessId = id;
+        lastLogResource = resource;
+        isProcessing = false; // Mark as processed
     }
 
-    // Make these public for the event handler to use
     public static final String LOG_FILE = "app.log";
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
-    public static final String LOG_PATTERN = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}.*";
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd");
+    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter
+            .ofPattern("HH:mm:ss");
+    public static final String LOG_PATTERN =
+            "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}.*";
 
     @Operation(summary = "Start log filtering process",
             description = "Initiates asynchronous log filtering and returns a process ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
+        @ApiResponse(responseCode = "200",
                     description = "Process started successfully",
                     content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "400",
+        @ApiResponse(responseCode = "400",
                     description = "Invalid date/time format",
                     content = @Content),
-            @ApiResponse(responseCode = "500",
+        @ApiResponse(responseCode = "500",
                     description = "Internal server error",
                     content = @Content)
     })
@@ -75,21 +77,25 @@ public class LogController {
                     style = ParameterStyle.SIMPLE)
             @RequestParam(required = false) String time) {
 
-        Long currentId = ++logId;
-        processingStatus.put(currentId, false); // Mark as processing
+        synchronized (this) {
+            // Clear previous resource on new request
+            lastLogResource = null;
+            lastProcessId++;
+            isProcessing = true;
 
-        eventPublisher.publishEvent(new LogEvent(this, date, time, currentId));
+            eventPublisher.publishEvent(new LogEvent(this, date, time, lastProcessId));
 
-        return ResponseEntity.ok(Map.of("processId", currentId));
+            return ResponseEntity.ok(Map.of("processId", lastProcessId));
+        }
     }
 
     @Operation(summary = "Get processing status",
             description = "Returns the status of a log filtering process")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
+        @ApiResponse(responseCode = "200",
                     description = "Status retrieved",
                     content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404",
+        @ApiResponse(responseCode = "404",
                     description = "Process ID not found",
                     content = @Content)
     })
@@ -98,51 +104,44 @@ public class LogController {
             @Parameter(description = "Process ID", example = "1")
             @PathVariable Long id) {
 
-        if (!processingStatus.containsKey(id)) {
-            return ResponseEntity.notFound().build();
-        }
+        synchronized (this) {
+            if (!id.equals(lastProcessId)) {
+                return ResponseEntity.notFound().build();
+            }
 
-        boolean isReady = processingStatus.get(id);
-        return ResponseEntity.ok(Map.of(
-                "status", isReady ? "READY" : "PROCESSING",
-                "processId", id.toString()
-        ));
+            return ResponseEntity.ok(Map.of(
+                    "status", isProcessing ? "PROCESSING" : "READY",
+                    "processId", id.toString()
+            ));
+        }
     }
 
     @Operation(summary = "Download filtered logs",
             description = "Downloads the filtered logs for a completed process")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
+        @ApiResponse(responseCode = "200",
                     description = "Logs downloaded successfully",
                     content = @Content(mediaType = "text/plain")),
-            @ApiResponse(responseCode = "404",
+        @ApiResponse(responseCode = "404",
                     description = "Process not found or not completed",
                     content = @Content)
     })
-
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> downloadFilteredLogs(
             @Parameter(description = "Process ID", example = "1")
             @PathVariable Long id) {
 
-        synchronized (this) {  // Добавляем синхронизацию для thread-safety
-            if (!logFiles.containsKey(id)) {
+        synchronized (this) {
+            if (!id.equals(lastProcessId) || lastLogResource == null) {
                 return ResponseEntity.notFound().build();
             }
 
-            Resource resource = logFiles.get(id);
             try {
-                ResponseEntity<Resource> response = ResponseEntity.ok()
+                return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION,
                                 "attachment; filename=\"filtered_logs_" + id + ".log\"")
-                        .contentLength(resource.contentLength())
-                        .body(resource);
-
-                // Удаляем файл и статус после успешного создания ответа
-                logFiles.remove(id);
-                processingStatus.remove(id);
-
-                return response;
+                        .contentLength(lastLogResource.contentLength())
+                        .body(lastLogResource);
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
