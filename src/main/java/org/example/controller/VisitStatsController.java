@@ -2,12 +2,13 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Map;
 import org.example.service.VisitStatsService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/stats")
@@ -23,5 +24,10 @@ public class VisitStatsController {
     @GetMapping
     public Map<String, Long> getStats() {
         return statsService.getStats();
+    }
+
+    @DeleteMapping("/reset")
+    public void resetStats() {
+        statsService.resetStats();
     }
 }

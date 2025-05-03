@@ -24,4 +24,8 @@ public class VisitStatsServiceImpl implements VisitStatsService {
                         e -> e.getValue().get()
                 ));
     }
+
+    public void resetStats() {
+        stats.clear(); // Очищаем всю статистику
+    }
 }

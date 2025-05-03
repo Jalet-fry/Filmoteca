@@ -43,6 +43,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class FilmController {
     private final FilmService filmService;
 
+    @GetMapping("/test-load")
+    public String testEndpoint() {
+        return "OK";
+    }
+
     @Operation(summary = "Create a new film")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Film created successfully"),
