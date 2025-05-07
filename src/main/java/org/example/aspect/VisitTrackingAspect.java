@@ -18,27 +18,12 @@ public class VisitTrackingAspect {
     public VisitTrackingAspect(VisitStatsService statsService) {
         this.statsService = statsService;
     }
+    // Точка среза для всех RestController'ов, кроме VisitStatsController
+    @Pointcut("@within(org.springframework.web.bind.annotation.RestController) && " +
+            "!within(org.example.controller.VisitStatsController)")
+    public void allControllersExceptStats() {}
 
-    @Pointcut("@within(org.springframework.web.bind.annotation.RestController)")
-    public void restController() {}
-
-    /*
-    @Before("restController() && execution(* *(..))")
-    public void trackVisit(JoinPoint jp) {
-        // Пример: "ActorController.getAllActors()"
-        String endpoint = jp.getSignature().toShortString();
-        statsService.recordVisit(endpoint);
-    }
-    @Before("restController() && execution(* *(..))")
-    public void trackVisit(JoinPoint jp) {
-        HttpServletRequest request =
-                ((ServletRequestAttributes)
-                RequestContextHolder.currentRequestAttributes()).getRequest();
-        String url = request.getRequestURI(); // Например: "/films/1"
-        statsService.recordVisit(url);
-    }
-    */
-    @Before("restController() && execution(* *(..))")
+    @Before("allControllersExceptStats() && execution(* *(..))")
     public void trackVisit(JoinPoint jp) {
         HttpServletRequest request =
                 ((ServletRequestAttributes)
