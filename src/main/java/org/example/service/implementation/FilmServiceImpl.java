@@ -88,9 +88,34 @@ public class FilmServiceImpl implements FilmService {
 
     @SneakyThrows
     @Override
-    //@Transactional
+    @Transactional
     public void create(Film film) {
         try {
+            film.setId(0);
+
+            // Проверка и связывание существующего режиссера
+            if (film.getDirector() != null) {
+                Optional<Director> existingDirector = directorRepository.getByFirstNameAndSecondNameAndLastName(
+                        film.getDirector().getFirstName(),
+                        film.getDirector().getSecondName(),
+                        film.getDirector().getLastName());
+
+                existingDirector.ifPresent(film::setDirector);
+            }
+
+            // Проверка и связывание существующих актеров
+            if (film.getActors() != null) {
+                List<Actor> existingActors = film.getActors().stream()
+                        .map(actor -> actorRepository.getByFirstNameAndSecondNameAndLastName(
+                                        actor.getFirstName(),
+                                        actor.getSecondName(),
+                                        actor.getLastName())
+                                .orElse(actor))
+                        .collect(Collectors.toList());
+
+                film.setActors(existingActors);
+            }
+
             Film savedFilm = filmRepository.save(film);
             inMemoryCache.put(savedFilm.getId(), savedFilm);
         } catch (DataIntegrityViolationException ex) {

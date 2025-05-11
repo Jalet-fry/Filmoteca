@@ -1,5 +1,7 @@
 package org.example.model;
 
+import static org.example.utils.Utils.MAXDEPTH;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +78,7 @@ public class Convert {
     }
 
     public static ActorDto toDto(Actor from) {
-        return toDto(from, 1);
+        return toDto(from, MAXDEPTH);
     }
 
     private static ActorDto toDto(Actor from, int depth) {
@@ -98,7 +100,7 @@ public class Convert {
     }
 
     public static DirectorDto toDto(Director from) {
-        return toDto(from, 1);
+        return toDto(from, MAXDEPTH);
     }
 
     public static DirectorDto toDto(Director from, int depth) {
@@ -121,7 +123,7 @@ public class Convert {
     }
 
     public static FilmDto toDto(Film from) {
-        return toDto(from, 1);
+        return toDto(from, MAXDEPTH);
     }
 
     public static FilmDto toDto(Film from, int depth) {

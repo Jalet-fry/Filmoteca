@@ -6,5 +6,6 @@ public class Utils {
     }
 
     public static final int MAXTEXTSIZE = 20;
+    public static final int MAXDEPTH = 1;
 
 }

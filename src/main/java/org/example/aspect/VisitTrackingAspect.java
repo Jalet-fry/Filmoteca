@@ -18,9 +18,11 @@ public class VisitTrackingAspect {
     public VisitTrackingAspect(VisitStatsService statsService) {
         this.statsService = statsService;
     }
+
     // Точка среза для всех RestController'ов, кроме VisitStatsController
-    @Pointcut("@within(org.springframework.web.bind.annotation.RestController) && " +
-            "!within(org.example.controller.VisitStatsController)")
+
+    @Pointcut("@within(org.springframework.web.bind.annotation.RestController) && "
+            + "!within(org.example.controller.VisitStatsController)")
     public void allControllersExceptStats() {}
 
     @Before("allControllersExceptStats() && execution(* *(..))")

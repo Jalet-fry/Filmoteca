@@ -17,6 +17,7 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.model.Convert;
 import org.example.model.FilmDto;
 import org.example.model.db.Film;
@@ -34,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/films")
@@ -60,7 +61,9 @@ public class FilmController {
     })
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody FilmDto filmDto) {
+        log.info("Received FilmDto (RAW JSON): {}", filmDto);
         Film film = toEntity(filmDto);
+        log.info("Converted Film entity: {}", film);
         film.setId(0);
         filmService.create(film);
         return ResponseEntity.status(201).body("Film created successfully");
