@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -174,7 +175,9 @@ public class ActorController {
     })
     @GetMapping("/all")
     public ResponseEntity<List<ActorDto>> getAllActors() {
-        List<ActorDto> actorDtos = Convert.toDtoListActors(actorService.getAll());
+        List<ActorDto> actorDtos = Convert.toDtoListActors(
+                actorService.getAll().stream().sorted(
+                        Comparator.comparingLong(Actor::getId)).toList());
         return ResponseEntity.ok(actorDtos);
     }
 

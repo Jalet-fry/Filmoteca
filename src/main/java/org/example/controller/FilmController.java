@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -192,6 +193,8 @@ public class FilmController {
         } else {
             films = filmService.getAll();
         }
-        return ResponseEntity.ok(films.stream().map(Convert::toDto).toList());
+        return ResponseEntity.ok(films.stream()
+                .sorted(Comparator.comparingLong(Film::getId))
+                .map(Convert::toDto).toList());
     }
 }

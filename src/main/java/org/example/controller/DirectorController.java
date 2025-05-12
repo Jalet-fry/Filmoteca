@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -187,7 +188,9 @@ public class DirectorController {
     })
     @GetMapping("/all")
     public ResponseEntity<List<DirectorDto>> getAllDirectors() {
-        List<DirectorDto> directorDtos = Convert.toDtoListDirectors(directorService.getAll());
+        List<DirectorDto> directorDtos = Convert.toDtoListDirectors(
+                directorService.getAll().stream().sorted(
+                        Comparator.comparingLong(Director::getId)).toList());
         return ResponseEntity.ok(directorDtos);
     }
 }

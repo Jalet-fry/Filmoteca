@@ -88,7 +88,7 @@ public class FilmServiceImpl implements FilmService {
 
     @SneakyThrows
     @Override
-    @Transactional
+//    @Transactional
     public void create(Film film) {
         try {
             film.setId(0);
