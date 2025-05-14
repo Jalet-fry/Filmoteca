@@ -1,0 +1,7 @@
+FROM mysql
+
+ENV MYSQL_ROOT_PASSWORD qwerty
+#ENV MYSQL_TCP_PORT 3307
+ADD init.sql /docker-entrypoint-initdb.d
+
+EXPOSE 3306

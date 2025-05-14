@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # Сервис MySQL
+  mysql:
+    image: mysql:8.0
+#    build:
+#      context: .
+#      dockerfile: Dockerfile2
+    container_name: filmoteca-mysql
+    environment:
+      MYSQL_DATABASE: lab2
+      MYSQL_USER: bender
+      MYSQL_PASSWORD: zirael228
+      MYSQL_ROOT_PASSWORD: zirael228
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/lab2  # Оставляем 3306 внутри Docker-сети
+    ports:
+      - "3307:3306" # Внешний порт 3307 → внутренний 3306
+    networks:
+      - filmoteca-network
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init-db.sql
+networks:
+  filmoteca-network:
+    driver: bridge

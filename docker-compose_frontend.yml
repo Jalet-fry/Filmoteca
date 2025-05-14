@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  # Сервис React (фронтенд)
+  frontend:
+    build:
+      context: C:/frontend/filmoteca
+      dockerfile: Dockerfile
+    container_name: filmoteca-frontend
+    ports:
+      - "3000:80"
+    networks:
+      - filmoteca-network
+networks:
+  filmoteca-network:
+    driver: bridge

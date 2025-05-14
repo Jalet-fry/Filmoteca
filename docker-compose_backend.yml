@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  # Сервис Spring Boot (бэкенд)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: filmoteca-backend
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3307/lab2
+      SPRING_DATASOURCE_USERNAME: bender
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - filmoteca-network
+networks:
+  filmoteca-network:
+    driver: bridge

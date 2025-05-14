@@ -4,18 +4,22 @@ services:
   # Сервис MySQL
   mysql:
     image: mysql:8.0
+    #    build:
+    #      context: .
+    #      dockerfile: Dockerfile2
     container_name: filmoteca-mysql
     environment:
       MYSQL_DATABASE: lab2
       MYSQL_USER: bender
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_PASSWORD: zirael228
+      MYSQL_ROOT_PASSWORD: zirael228
+    #      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/lab2  # Оставляем 3306 внутри Docker-сети
     ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
+      - "3307:3306" # Внешний порт 3307 → внутренний 3306
     networks:
       - filmoteca-network
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init-db.sql
 
   # Сервис Spring Boot (бэкенд)
   backend:
@@ -26,9 +30,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/lab2
+      SPRING_DATASOURCE_URL: jdbc:mysql://filmoteca-mysql:3306/lab2
       SPRING_DATASOURCE_USERNAME: bender
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - mysql
     networks:
@@ -37,7 +41,7 @@ services:
   # Сервис React (фронтенд)
   frontend:
     build:
-      context: ../frontend/filmoteca
+      context: C:/frontend/filmoteca
       dockerfile: Dockerfile
     container_name: filmoteca-frontend
     ports:
@@ -48,8 +52,6 @@ services:
       - filmoteca-network
 
 # Объявляем тома и сети
-volumes:
-  mysql_data:
 
 networks:
   filmoteca-network:
