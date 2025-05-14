@@ -19,8 +19,8 @@ public class LogEventHandler implements ApplicationListener<LogEvent> {
     public void onApplicationEvent(LogEvent event) {
         new Thread(() -> {
             try {
-                // Добавляем задержку 111 секунд для тестирования параллельной работы
-                Thread.sleep(111000);
+                // Добавляем задержку 50*10^3 милисекунд для тестирования параллельной работы
+                Thread.sleep(20000);
 
                 Path logPath = Paths.get("app.log");
                 String filteredLogs = filterLogs(logPath, event.getDate(), event.getTime());

@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Сервис MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: filmoteca-mysql
+    environment:
+      MYSQL_DATABASE: lab2
+      MYSQL_USER: bender
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - filmoteca-network
+
+  # Сервис Spring Boot (бэкенд)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: filmoteca-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/lab2
+      SPRING_DATASOURCE_USERNAME: bender
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - mysql
+    networks:
+      - filmoteca-network
+
+  # Сервис React (фронтенд)
+  frontend:
+    build:
+      context: ../frontend/filmoteca
+      dockerfile: Dockerfile
+    container_name: filmoteca-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - filmoteca-network
+
+# Объявляем тома и сети
+volumes:
+  mysql_data:
+
+networks:
+  filmoteca-network:
+    driver: bridge

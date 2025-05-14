@@ -87,15 +87,16 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @SneakyThrows
+    @SuppressWarnings("S6204")
     @Override
-//    @Transactional
     public void create(Film film) {
         try {
             film.setId(0);
 
             // Проверка и связывание существующего режиссера
             if (film.getDirector() != null) {
-                Optional<Director> existingDirector = directorRepository.getByFirstNameAndSecondNameAndLastName(
+                Optional<Director> existingDirector = directorRepository
+                        .getByFirstNameAndSecondNameAndLastName(
                         film.getDirector().getFirstName(),
                         film.getDirector().getSecondName(),
                         film.getDirector().getLastName());
