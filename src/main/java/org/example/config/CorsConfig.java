@@ -9,7 +9,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000") // URL твоего React-приложения
+                .allowedOrigins("https://frontendfilmoteca.onrender.com") // URL твоего React-приложения
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH");
     }
 }
