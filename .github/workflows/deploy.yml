@@ -29,3 +29,7 @@ jobs:
         with:
           service-id: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}  # ID сервиса в Render
           api-key: ${{ secrets.RENDER_API_KEY }}  # API-ключ Render
+      - name: Debug variables
+        run: |
+          echo "Service ID: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}"
+          echo "API Key: ${{ secrets.RENDER_API_KEY }}"
