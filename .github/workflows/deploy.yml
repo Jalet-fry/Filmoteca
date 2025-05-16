@@ -2,7 +2,7 @@ name: Deploy Backend to Render
 
 on:
   push:
-    branches: [ "render-deploy" ]  # Триггер на пуш в main
+    branches: [ "render-deploy" ]
 
 jobs:
   build-and-deploy:
@@ -22,13 +22,14 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew bootJar  # Собираем JAR
+        run: ./gradlew bootJar
 
-      - name: Deploy to Render
-        uses: render-actions/deploy@v1
-        with:
-          service-id: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}  # ID сервиса в Render
-          api-key: ${{ secrets.RENDER_API_KEY }}  # API-ключ Render
+      - name: Deploy to Render via API
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Accept: application/vnd.render+json; version=2021-06-01" \
+            "https://api.render.com/v1/services/${{ secrets.RENDER_BACKEND_SERVICE_ID }}/deploys"
       - name: Debug variables
         run: |
           echo "Service ID: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}"
