@@ -1,0 +1,31 @@
+name: Deploy Backend to Render
+
+on:
+  push:
+    branches: [ "render-deploy" ]  # Триггер на пуш в main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew bootJar  # Собираем JAR
+
+      - name: Deploy to Render
+        uses: render-actions/deploy@v1
+        with:
+          service-id: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}  # ID сервиса в Render
+          api-key: ${{ secrets.RENDER_API_KEY }}  # API-ключ Render
